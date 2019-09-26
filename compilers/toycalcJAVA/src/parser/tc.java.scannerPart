@@ -1,0 +1,67 @@
+// D. Resler 4/2010
+
+package compilers.toycalc;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import compilers.Parser;
+import compilers.Lexer;
+import compilers.CodeGenerator;
+import compilers.CompilationErrorException;
+import compilers.CodeGenerationException;
+
+import compilers.toycalc.parser.TCscanner;
+import compilers.toycalc.parser.TCtoken;
+import compilers.toycalc.output.TCoutput;
+
+public class tc {
+
+    public static void main(String [] args) throws FileNotFoundException,IOException {
+        try {
+            processCommandLine(args);
+
+            Lexer scanner = new TCscanner(TCglobals.inputFileName);
+
+            while (scanner.getToken().getToken() != TCtoken.Tokens.EOF) ;
+
+        } catch(UsageException e) { }
+          catch(CompilationErrorException e) { }
+          catch(CodeGenerationException e) { }
+    }
+
+    private static void processCommandLine(String [] args) {
+        switch(args.length) {
+        case 0: printUsageMessage(); break;
+        case 1: if (args[0].charAt(0) != '-')
+                  TCglobals.inputFileName = args[0];
+                else
+                  printUsageMessage();
+                break;
+        case 2: if (args[0].equals("-v")) {
+                  TCglobals.verbose = true;
+                  TCglobals.inputFileName = args[1];
+                } else printUsageMessage();
+                break;
+        default: printUsageMessage();
+        }
+        TCglobals.outputClassFileName = getProgramName(TCglobals.inputFileName);
+        TCglobals.targetFileName = TCglobals.outputClassFileName+"."+TCglobals.ASM_FILE_EXTENSION;;
+   }
+
+    private static String getProgramName(String s) {
+        String [] strs =  s.split("\\.");
+        return strs[0];
+    }
+
+    private static void printUsageMessage() {
+        System.out.println("Usage: java toycalc.tc [-v] input_file");
+        System.out.println("  where -v means verbose output");
+        throw new UsageException();
+    }
+
+    private static class UsageException extends java.lang.RuntimeException{
+        public UsageException() { super(); }
+    }
+
+}
