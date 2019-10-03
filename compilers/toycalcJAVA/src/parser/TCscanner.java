@@ -120,6 +120,7 @@ public class TCscanner implements Lexer {
             case '&':
                 return StateAnd();
             default:
+                refresh();
                 return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
         }
     }
@@ -148,8 +149,6 @@ public class TCscanner implements Lexer {
                 return new TCtoken(TCtoken.Tokens.MULOP, lexeme);
         }
     }
-    
-
 
     private Token StateSingleComment() {    // single-line comment
     	
@@ -162,18 +161,21 @@ public class TCscanner implements Lexer {
     }
 
     private Token StateMultiComment() {    // multi-line comment
-        refresh();
-
-        while (true) {
-            while (charBuff != '*')
-                charBuff = getChar();
-            
-            if ((charBuff = getChar()) == '/')
-            {
-            	charBuff = getChar();
-                return new TCtoken(TCtoken.Tokens.NONE);
+        while ((charBuff = getChar()) != EOFCHAR) {
+            if (charBuff == '/') {
+                if ((charBuff = getChar()) == '*') {
+                    StateMultiComment();
+                }
+            }
+            if (charBuff == '*') {
+                if ((charBuff = getChar()) == '/') {
+                    charBuff = getChar();
+                    return new TCtoken(TCtoken.Tokens.NONE);
+                }
             }
         }
+
+        return new TCtoken(TCtoken.Tokens.ERROR);
     }
     
     private Token StateNumber() {    // number start state
