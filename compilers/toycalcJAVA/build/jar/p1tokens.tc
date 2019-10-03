@@ -1,0 +1,17 @@
+    int      char     return   if       else     for
+    do       while    switch   case     default  write
+    read     continue break    newline
+
+// comment #1
+/*
+//comment #2
+//
+/* /* */
+*/ */
+
+how now brown cow 15.5bye
+' ' 'x' ''
+"silly me" ""
+
+=== < > <= >= != + - * || ; !{)]
+%(^

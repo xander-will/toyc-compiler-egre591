@@ -120,7 +120,7 @@ public class TCscanner implements Lexer {
             case '&':
                 return StateAnd();
             default:
-                return null;
+                return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
         }
     }
 
@@ -251,8 +251,6 @@ public class TCscanner implements Lexer {
     }
 
     private Token StateString() {   // string state
-        refresh();
-
         while (charBuff != '\n') {
             refresh();
             if (charBuff == '"') {
@@ -333,13 +331,6 @@ public class TCscanner implements Lexer {
     }
     public int getLineNum() { 
         return lineNum; 
-    }
-
-    private static boolean isInteger(String s) {
-        try {
-            Integer.parseInt(s);
-        } catch (NumberFormatException e) { return false; }
-        return true;
     }
 
 }
