@@ -131,22 +131,219 @@ public class TCparser implements Parser {
         return new Type(ty);
     }
 
-    private FunctionDefinition functiondefinition() {
-        FunctionHeader fh = functionheader();
-        FunctionBody fb = functionbody();
+    private FunctionDefinition functionDefinition() {
+        FunctionHeader fh = functionHeader();
+        FunctionBody fb = functionBody();
 
         return new FunctionDefinition(fh, fb);
     }
 
-    private FunctionHeader functionheader() {
+    private FunctionHeader functionHeader() {
         accept(TCtokens.Tokens.LPAREN);
         FormalParamList fpl = null;
         if (isTypeToken(buff)) {
-            fpl = formalparamlist();
+        	paramlist<Param> = new List<Param>();
+            fpl = formalparamlist(paramlist);
         }
         accept(TCtokens.Tokens.RPAREN);
 
         return new FunctionHeader(fpl);
     }
+    
+    private FunctionBody functionbody() {
+    	
+    }
+    
+    private FormalParamList formalParamList(List<Param> paramlist) {
+    	Type ty = type();
+    	String id = acceptSave(TCtoken.Tokens.ID).getLexeme();
+    	
+    	paramlist.add(new Param(ty, id));
+    	
+    	if (buff.equals(TCtoken.Tokens.COMMA))
+    	{
+    		return formalparamlist(paramlist);
+    	}
+    	else
+    	{
+    		return new FormalParamList(paramlist);
+    	}
+    }
+    
+    private Statement statement() {
+    	Statement s = null;
+    	enteringDEBUG("statement");
+    	
+    	switch((TCtoken.Tokens)buff.getTokenType()) {
+    		case BREAK:
+    			if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.SEMICOLON)) {
+    				s = new BreakStatement();
+    			}
+    			else {
+    				TCoutput.reportSYNTAX_ERROR(scanner, TCtoken.Tokens.SEMICOLON + " expected");
+    			}
+    			break;
+    			
+    		case LCURLY:
+    			s = compoundStatement();
+    			break;
+    			
+    		case IF:
+    			s = ifStatement();
+    			break;
+    			
+    		case SEMICOLON:
+    			s = new NullStatement();
+    			break;
+    			
+    		case WHILE:
+    			s = whileStatement();
+    			break;
+    			
+    		case READ:
+    			s = readStatement();
+    			break;
+    			
+    		case WRITE:
+    			s = writeStatement();
+    			break;
+    			
+    		case NEWLINE:
+    			if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.SEMICOLON)) {
+    				s = new NewlineStatement();
+    			}
+    			else {
+    				TCoutput.reportSYNTAX_ERROR(scanner, TCtoken.Tokens.SEMICOLON + " expected");
+    			}
+    			break;
+    			
+    		case ID:
+    			s = expressionStatement();
+    			break;
+    	}
+    	return s;
+    }
+    
+    private CompoundStatement compoundStatement() {
+    	
+    }
 
+    private IfStatement ifStatement() {
+    	
+    }
+    
+    private WhileStatement whileStatement() {
+    	
+    }
+    
+    private ReadStatement readStatement() {
+
+    }
+    
+    private WriteStatement writeStatement() {
+    	accept(TCtoken.Tokens.WRITE);
+    	accept(TCtoken.Tokens.LPAREN);
+    	ActualParameters ap = actualParameters(new List<Expression>());
+    	accept(TCtoken.Tokens.RPAREN);
+    	accept(TCtoken.Tokens.SEMICOLON);
+    	
+    	return new WriteStatement(ap);
+    }
+    
+    private ExpressionStatement expressionStatement() {
+    	Expression expr = expression(new List<RelopExpression>());
+    	accept(TCtoken.Tokens.SEMICOLON);
+    	
+    	return new ExpressionStatement(expr);
+    }
+    
+    private Expression expression(List<RelopExpression> reList) {
+    	reList.add(relopExpression(new List<SimpleExpression>()));
+    	
+    	if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.ASSIGNOP)) {
+    		accept(TCtoken.Tokens.ASSIGNOP);
+    		relopExpression(reList);
+    	}
+    	else {
+    		return new RelopExpression(reList);
+    	}
+    }
+    
+    private RelopExpression relopExpression(List<SimpleExpression> seList) {
+    	seList.add(simpleExpression(new List<Term>()));
+    	
+    	if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.RELOP)) {
+    		accept(TCtoken.Tokens.RELOP);
+    		relopExpression(seList);
+    	}
+    	else {
+    		return new RelopExpression(seList);
+    	}
+    }
+    
+    private SimpleExpression simpleExpression(List<Term> termList) {
+    	termList.add(term(new List<Primary>()));
+    	
+    	if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.ADDOP)) {
+    		accept(TCtoken.Tokens.ADDOP);
+    		simpleExpression(termList);
+    	}
+    	else {
+    		return new SimpleExpression(termList);
+    	}
+    }
+    
+    private Term term(List<Primary> primList) {
+    	primList.add(primary());
+    	
+    	if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.MULOP)) {
+    		term(primList);
+    	}
+    	else {
+        	return new Term(primList);
+    	}
+    }
+    
+    private Primary primary() {
+    	
+    	switch((TCtoken.Tokens)buff.getTokenType()) {
+    	
+    		case ID:
+    			functionCall();
+    			break;
+    		case NUMBER:
+    			break;
+    		case STRING:
+    			break;
+    		case CHAR:
+    			break;
+    		case LPAREN:
+    			accept(TCtoken.Tokens.LPAREN);
+    			Expression expr = expression();
+    			accept(TCtoken.Tokens.RPAREN);
+    			break;
+    		case NOT: 
+    			Primary p = primary();
+    			break;
+    	}
+    }
+    
+    private FunctionCall functionCall() {
+    	accept(TCtoken.Tokens.LPAREN);
+    	ActualParameters ap = actualParameters(new List<Expression>());
+    	accept(TCtoken.Tokens.RPAREN);
+    	return new FunctionCall(ap);
+    }
+    
+    private ActualParameters actualParameters(List<Expression> params) {
+    	params.add(expression());
+    	
+    	if (scanner.getToken().getTokenType.equals(TCtoken.Tokens.COMMA)) {
+    		accept(TCtoken.Tokens.COMMA);
+    		actualParameters(params);
+    	}
+    	else {
+    		return new ActualParameters(params);
+    	}
+    }
 }
