@@ -27,6 +27,7 @@ import symTable.TCsymTable;
  Type --> int | char
  FunctionDefinition --> FunctionHeader FunctionBody
  FunctionHeader --> ( FormalParamList? )
+ FunctionBody --> CompoundStatement
  FormalParamList --> Type identifier (, Type identifier)*
  Statement --> ExpressionStatement
              | BreakStatement
@@ -109,7 +110,7 @@ public class TCparser implements Parser {
         Type ty = type();
         String id = acceptSave(TCtoken.Tokens.ID).getLexeme();
         if (buff.getTokenType().equals(TCtoken.Tokens.LPAREN)) {
-            FunctionDefinition fd = functiondefinition();
+            FunctionDefinition fd = functionDefinition();
             return new Definition(ty, id, fd);
         }
         else {
@@ -127,7 +128,7 @@ public class TCparser implements Parser {
         else
             TCoutput.reportSYNTAX_ERROR(scanner, "expected type");
 
-        buff = scanner.getToken().
+        buff = scanner.getToken();
         return new Type(ty);
     }
 
@@ -150,8 +151,8 @@ public class TCparser implements Parser {
         return new FunctionHeader(fpl);
     }
     
-    private FunctionBody functionbody() {
-    	
+    private FunctionBody functionBody() {
+    	return new FunctionBody(compoundStatement());
     }
     
     private FormalParamList formalParamList(List<Param> paramlist) {
@@ -160,9 +161,9 @@ public class TCparser implements Parser {
     	
     	paramlist.add(new Param(ty, id));
     	
-    	if (buff.equals(TCtoken.Tokens.COMMA))
+    	if (buff.getTokenType().equals(TCtoken.Tokens.COMMA))
     	{
-    		return formalparamlist(paramlist);
+    		return formalParamList(paramlist);
     	}
     	else
     	{
@@ -225,19 +226,68 @@ public class TCparser implements Parser {
     }
     
     private CompoundStatement compoundStatement() {
-    	
+		ArrayList<Definition> dl = ArrayList<>();
+		ArrayList<Statement> sl = ArrayList<>();
+
+    	accept(TCtoken.Tokens.LCURLY);
+		while (isTypeToken(buff))
+		{
+			Type ty = type();
+    		String id = acceptSave(TCtoken.Tokens.ID).getLexeme();
+			accept(TCtoken.Tokens.SEMICOLON);
+			dl.add(ty, id);
+		}
+		while (!buff.getTokenType().equals(TCtoken.Tokens.RCURLY))
+		{
+			sl.add(Statement());	
+		}
+		accept(TCtoken.Tokens.RCURLY);
+
+		return new CompoundStatement(dl, sl);
     }
 
     private IfStatement ifStatement() {
-    	
+    	accept(TCtoken.Tokens.IF);
+		accept(TCtoken.Tokens.RPAREN);
+		Expression condition = expression();
+		accept(TCtoken.Tokens.LPAREN);
+		Statement ifs = statement();
+		if (buff.getTokenType().equals(TCtoken.Tokens.ELSE))
+		{
+			accept(TCtoken.Tokens.ELSE);
+			Statement els = statement();
+			return new IfStatement(condition, ifs, els);
+		}
+		else
+		{
+			return new IfStatement(condition, ifs);
+		}
     }
     
     private WhileStatement whileStatement() {
-    	
+    	accept(TCtoken.Tokens.WHILE);
+		accept(TCtoken.Tokens.RPAREN);
+		Expression condition = expression();
+		accept(TCtoken.Tokens.LPAREN);
+		Statement s = statement();
+
+		return new WhileStatement(condition, s);
     }
     
     private ReadStatement readStatement() {
+		ArrayList<String> ids = ArrayList<>();
 
+		accept(TCtoken.Tokens.READ);
+		accept(TCtoken.Tokens.RPAREN);
+		ids.add(acceptSave(TCtoken.Tokens.ID).getLexeme());
+		while (buff.getTokenType().equals(TCtoken.Tokens.COMMA))
+		{
+			accept(TCtoken.Tokens.COMMA);
+			ids.add(acceptSave(TCtoken.Tokens.ID).getLexeme());
+		}
+		accept(TCtoken.Tokens.LPAREN);
+
+		return new ReadStatement(ids);
     }
     
     private WriteStatement writeStatement() {
@@ -260,7 +310,7 @@ public class TCparser implements Parser {
     private Expression expression(List<RelopExpression> reList) {
     	reList.add(relopExpression(new List<SimpleExpression>()));
     	
-    	if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.ASSIGNOP)) {
+    	if (buff.getTokenType().equals(TCtoken.Tokens.ASSIGNOP)) {
     		accept(TCtoken.Tokens.ASSIGNOP);
     		relopExpression(reList);
     	}
@@ -305,11 +355,10 @@ public class TCparser implements Parser {
     }
     
     private Primary primary() {
-    	
     	switch((TCtoken.Tokens)buff.getTokenType()) {
     	
     		case ID:
-    			functionCall();
+    			;
     			break;
     		case NUMBER:
     			break;
@@ -321,6 +370,7 @@ public class TCparser implements Parser {
     			accept(TCtoken.Tokens.LPAREN);
     			Expression expr = expression();
     			accept(TCtoken.Tokens.RPAREN);
+				return Expr(expr);
     			break;
     		case NOT: 
     			Primary p = primary();
