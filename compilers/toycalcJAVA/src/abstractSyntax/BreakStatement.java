@@ -1,4 +1,4 @@
-package parser;
+package abstractSyntax;
 
 import abstractSyntax.Statement;
 

@@ -1,10 +1,10 @@
  /*
   * EGRE 591
- *  TCtoken.java --- 9/26/2019
- *  
- *  Written by Samuel Coppedge and Xander Will
- * 
- */
+  * TCtoken.java --- 9/26/2019
+  *  
+  * Written by Samuel Coppedge and Xander Will
+  * 
+  */
 
 
 package parser;

@@ -1,15 +1,7 @@
 package abstractSyntax;
 
-import compilers.Symbol;
+import compilers.AbstractSyntax;
 
-public class Definition {
-
-	public Definition(Type ty, String id) {
-		// TODO Auto-generated constructor stub
-	}
-
-	public Definition(Type ty, String id, FunctionDefinition fd) {
-		// TODO Auto-generated constructor stub
-	}
+public class Definition extends AbstractSyntax {
 
 }

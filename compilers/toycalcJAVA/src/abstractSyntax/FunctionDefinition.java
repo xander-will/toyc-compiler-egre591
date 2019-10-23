@@ -5,7 +5,7 @@ import parser.FunctionBody;
 
 public class FunctionDefinition implements Definition {
 
-	public FunctionDefinition(FunctionHeader fh, FunctionBody fb) {
+	public FunctionDefinition(Type ty, String id, List<VariableDefinition> fpl, Statement s) {
 		// TODO Auto-generated constructor stub
 	}
 

@@ -89,14 +89,8 @@ public class TCparser implements Parser {
     public AbstractSyntax parse() {
         buff = scanner.getToken();
         Program p = program();
-        checkIfAllLabelTargetsAreDefined(p);
         return p;
     }
-
-    private void checkIfAllLabelTargetsAreDefined(Program p) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	private Boolean isTypeToken(Token t) {
         TCtoken.Tokens tok = (Tokens) t.getTokenType();
@@ -115,14 +109,15 @@ public class TCparser implements Parser {
 
     private Definition definition() {
         Type ty = type();
-        String id = acceptSave(TCtoken.Tokens.ID).getLexeme();
+        Identifier id = identifier();
         if (buff.getTokenType().equals(TCtoken.Tokens.LPAREN)) {
-            FunctionDefinition fd = functionDefinition();
-            return new Definition(ty, id, fd);
+            List<VariableDefinition> fd = functionHeader();
+			Statement s = compoundStatement();
+            return new FunctionDefinition(ty, id, fd, s);
         }
         else {
             accept(TCtoken.Tokens.SEMICOLON);
-            return new Definition(ty, id);
+            return new VariableDefinition(ty, id);
         }
     }
 
@@ -139,34 +134,26 @@ public class TCparser implements Parser {
         return new Type(ty);
     }
 
-    private FunctionDefinition functionDefinition() {
-        FunctionHeader fh = functionHeader();
-        FunctionBody fb = functionBody();
-
-        return new FunctionDefinition(fh, fb);
-    }
-
-    private FunctionHeader functionHeader() {
+    private List<VariableDefinition> functionHeader() {
         accept(TCtoken.Tokens.LPAREN);
-        FormalParamList fpl = null;
+        List<VariableDefinition> fpl = ArrayList<>();
         if (isTypeToken(buff)) {
-        	List<Param> paramlist = new ArrayList<Param>();
-            fpl = formalParamList(paramlist);
+            formalParamList(fpl);
         }
         accept(TCtoken.Tokens.RPAREN);
 
-        return new FunctionHeader(fpl);
+        return fpl;
     }
     
-    private FunctionBody functionBody() {
-    	return new FunctionBody(compoundStatement());
+    private Statement functionBody() {
+    	return compoundStatement();
     }
     
-    private FormalParamList formalParamList(List<Param> paramlist) {
+    private List<VariableDefinition> formalParamList(List<VariableDefinition> paramlist) {
     	Type ty = type();
-    	String id = acceptSave(TCtoken.Tokens.ID).getLexeme();
+    	Identifier id = identifier();
     	
-    	paramlist.add(new Param(ty, id));
+    	paramlist.add(new VariableDefinition(ty, id));
     	
     	if (buff.getTokenType().equals(TCtoken.Tokens.COMMA))
     	{
@@ -174,80 +161,74 @@ public class TCparser implements Parser {
     	}
     	else
     	{
-    		return new FormalParamList(paramlist);
+    		return paramlist;
     	}
     }
+
+	private Identifier identifier() {
+		return new Identifier(acceptSave(TCtoken.Tokens.ID).getLexeme())
+	}
     
     private Statement statement() {
-    	Statement s = null;
     	enteringDEBUG("statement");
-    	
     	switch((TCtoken.Tokens)buff.getTokenType()) {
     		case BREAK:
-    			if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.SEMICOLON)) {
-    				s = new BreakStatement();
-    			}
-    			else {
-    				TCoutput.reportSYNTAX_ERROR(scanner, TCtoken.Tokens.SEMICOLON + " expected");
-    			}
-    			break;
-    			
+    			return breakStatement();    			
     		case LCURLY:
-    			s = compoundStatement();
-    			break;
-    			
+    			return compoundStatement();
     		case IF:
-    			s = ifStatement();
-    			break;
-    			
+    			return ifStatement();
     		case SEMICOLON:
-    			s = new NullStatement();
-    			break;
-    			
+    			return nullStatement();
     		case WHILE:
-    			s = whileStatement();
-    			break;
-    			
+    			return whileStatement();
     		case READ:
-    			s = readStatement();
-    			break;
-    			
+    			return readStatement();
     		case WRITE:
-    			s = writeStatement();
-    			break;
-    			
+    			return writeStatement();
     		case NEWLINE:
-    			if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.SEMICOLON)) {
-    				s = new NewlineStatement();
-    			}
-    			else {
-    				TCoutput.reportSYNTAX_ERROR(scanner, TCtoken.Tokens.SEMICOLON + " expected");
-    			}
-    			break;
-    			
-    		case ID:
-    			s = expressionStatement();
-    			break;
+    			return newlineStatement();
+			case RETURN:
+				return returnStatement();
+    		default:
+    			return expressionStatement();
     	}
-    	return s;
     }
     
     private void enteringDEBUG(String string) {
 		// TODO Auto-generated method stub
+
+		// please use this as a reference to fill this out,
+		// and make an exitingDEBUG() as well
+		// every method needs an entering and exiting debug call
 		
 	}
 
+	private NewlineStatement newlineStatement() {
+		accept(TCtoken.Tokens.NEWLINE);
+		accept(TCtoken.Tokens.SEMICOLON);
+
+		return new NewlineStatement();
+	}
+
+	private BreakStatement breakStatement() {
+		accept(TCtoken.Tokens.BREAK);
+		accept(TCtoken.Tokens.SEMICOLON);
+
+		return new BreakStatement();
+	}
+
 	private CompoundStatement compoundStatement() {
-		HashMap<Type, String> dl = new HashMap<Type, String>();
+		ArrayList<VariableDefinition> dl = new ArrayList<>();
 		ArrayList<Statement> sl = new ArrayList<>();
 
     	accept(TCtoken.Tokens.LCURLY);
 		while (isTypeToken(buff))
 		{
 			Type ty = type();
-    		String id = acceptSave(TCtoken.Tokens.ID).getLexeme();
+    		Identifier id = identifier();
 			accept(TCtoken.Tokens.SEMICOLON);
-			dl.put(ty, id);
+			dl.add(ty, id);
 		}
 		while (!buff.getTokenType().equals(TCtoken.Tokens.RCURLY))
 		{
@@ -305,35 +286,50 @@ public class TCparser implements Parser {
     private WriteStatement writeStatement() {
     	accept(TCtoken.Tokens.WRITE);
     	accept(TCtoken.Tokens.LPAREN);
-    	ActualParameters ap = actualParameters(new ArrayList<Expression>());
+    	List<Expression> ap = actualParameters(new ArrayList<Expression>());
     	accept(TCtoken.Tokens.RPAREN);
     	accept(TCtoken.Tokens.SEMICOLON);
     	
     	return new WriteStatement(ap);
     }
+
+	private ReturnStatement returnStatement() {
+		accept(TCtoken.Tokens.RETURN);
+		Expression expr = expression();
+
+		return new ReturnStatement(expr);
+	}
+
+	private Operation operation(TCtoken.Tokens t) {
+		return new Operation(acceptSave(t).getLexeme());
+	}
     
     private ExpressionStatement expressionStatement() {
-    	Expression expr = expression(new ArrayList<Expression>());
+    	Expression expr = expression();
     	accept(TCtoken.Tokens.SEMICOLON);
     	
     	return new ExpressionStatement(expr);
     }
     
-    private Expression expression(List<Expression> reList) {
-    	reList.add(relopExpression(new ArrayList<Expression>()));
-    	
-    	if (buff.getTokenType().equals(TCtoken.Tokens.ASSIGNOP)) {
-    		accept(TCtoken.Tokens.ASSIGNOP);
-    		relopExpression(reList);
-    	}
+	/*  
+		THIS SHOULD BE THE MODEL FOR ALL OF THE OTHER RECURSIVE
+		EXPRESSION METHODS
+		please follow this template exactly
+	*/
+    private Expression expression() {
+		Expression left = relopExpression();
+		if (buff.getTokenType().equals(TCtoken.Tokens.ASSIGNOP)) {
+			Operation op = operation(TCtoken.Tokens.ASSIGNOP);
+			Expression right = expression();
+			return new Expr(op, left, right);
+		}
     	else {
-    		return new RelopExpression(reList);
+    		return left;
     	}
-    	return new RelopExpression(reList);
     }
     
-    private RelopExpression relopExpression(List<Expression> seList) {
-    	seList.add(simpleExpression(new ArrayList<Term>()));
+    private Expression relopExpression(List<Expression> seList) {
+    	seList.add(simpleExpression(new ArrayList<Expression>()));
     	
     	if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.RELOP)) {
     		accept(TCtoken.Tokens.RELOP);
@@ -345,8 +341,8 @@ public class TCparser implements Parser {
     	return new RelopExpression(seList);
     }
     
-    private SimpleExpression simpleExpression(List<Term> termList) {
-    	termList.add(term(new ArrayList<Primary>()));
+    private Expression simpleExpression(List<Expression> termList) {
+    	termList.add(term(new ArrayList<Expression>()));
     	
     	if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.ADDOP)) {
     		accept(TCtoken.Tokens.ADDOP);
@@ -358,7 +354,7 @@ public class TCparser implements Parser {
     	return new SimpleExpression(termList);
     }
     
-    private Term term(List<Primary> primList) {
+    private Expression term(List<Expression> primList) {
     	primList.add(primary());
     	
     	if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.MULOP)) {
@@ -370,46 +366,59 @@ public class TCparser implements Parser {
     	return new Term(primList);
     }
     
-    private Primary primary() {
-    	switch((TCtoken.Tokens)buff.getTokenType()) {
-    	
+    private Expression primary() {
+		TCtoken sw = buff;
+		buff = scanner.getToken();
+
+    	switch((TCtoken.Tokens)sw.getTokenType()) {
     		case ID:
-    			accept(TCtoken.Tokens.ID);
-    			break;
+				Identifier id = new Identifier(sw.getLexeme());
+				if (buff.getTokenType().equals(TCtoken.Tokens.LPAREN))
+				{
+					List<Expression> asp = functionCall();
+					return new FunctionCall(id, asp); 
+				}
+				else
+				{
+	    			return new Identifier(sw.getLexeme());
+				}
     		case NUMBER:
-    			break;
+				return new Number(sw.getLexeme());
     		case STRING:
-    			break;
+    			return new StringLiteral(sw.getLexeme());
     		case CHAR:
-    			break;
+    			return new CharLiteral(sw.getLexeme());
     		case LPAREN:
-    			accept(TCtoken.Tokens.LPAREN);
     			Expression expr = expression(new ArrayList<Expression>());
     			accept(TCtoken.Tokens.RPAREN);
 				return new Primary(expr);
-    		case NOT: 
-    			Primary p = primary();
+    		case NOT:
+    			Expression p = primary();
+				p.setNot();
     			return p;
+			case ADDOP:
+				Expression p = primary();
+				if (sw.getLexeme().equals("-"))
+					p.setMinus();
+				return p;
     	}
     }
     
-    private FunctionCall functionCall() {
+    private List<Expression> functionCall() {
     	accept(TCtoken.Tokens.LPAREN);
-    	ActualParameters ap = actualParameters(new ArrayList<Expression>());
+    	List<Expression> ap = actualParameters(new ArrayList<Expression>());
     	accept(TCtoken.Tokens.RPAREN);
-    	return new FunctionCall(ap);
+    	return ap;
     }
     
-    private ActualParameters actualParameters(List<Expression> params) {
+    private List<Expression> actualParameters(List<Expression> params) {
     	params.add(expression(params));
     	
     	if (scanner.getToken().equals(TCtoken.Tokens.COMMA)) {
     		accept(TCtoken.Tokens.COMMA);
     		actualParameters(params);
     	}
-    	else {
-    		return new ActualParameters(params);
-    	}
-    	return new ActualParameters(params);
+
+    	return params;
     }
 }

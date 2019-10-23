@@ -1,8 +1,10 @@
 package abstractSyntax;
 
-public class FunctionCall {
+import abstractSyntax.Expression;
 
-	public FunctionCall(ActualParameters ap) {
+public class FunctionCall extends Expression {
+
+	public FunctionCall(Identifier id, List<Expression> ap) {
 		// TODO Auto-generated constructor stub
 	}
 

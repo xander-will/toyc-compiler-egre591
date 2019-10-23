@@ -2,9 +2,9 @@ package abstractSyntax;
 
 import abstractSyntax.Expression;
 
-public class Primary implements Expression {
+public class Expr extends Expression {
 
-	public Primary(Expression expr) {
+	public Expr(Operator op, Expression left, Expression right) {
 		// TODO Auto-generated constructor stub
 	}
 
