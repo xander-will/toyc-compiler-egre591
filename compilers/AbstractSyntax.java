@@ -1,7 +1,8 @@
 package compilers;
 
 public interface AbstractSyntax {
+	
 
- public String toString();
+	public String toString();
 
 }

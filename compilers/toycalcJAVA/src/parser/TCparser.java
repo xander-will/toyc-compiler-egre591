@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 
 import compilers.Parser;
 import compilers.Lexer;
@@ -16,6 +17,7 @@ import globals.TCglobals;
 import abstractSyntax.*;
 
 import output.TCoutput;
+import parser.TCtoken.Tokens;
 import symTable.TCsymbol;
 import symTable.TCsymTable;
 
@@ -79,31 +81,36 @@ public class TCparser implements Parser {
     }
 
     private Token acceptSave(TCtoken.Tokens t) {
-        Token t = buff;
+        Token token = buff;
         accept(t);
-        return t;
+        return token;
     }
 
     public AbstractSyntax parse() {
         buff = scanner.getToken();
-        ToyCProgram p = program();
+        Program p = program();
         checkIfAllLabelTargetsAreDefined(p);
         return p;
     }
 
-    private Boolean isTypeToken(Token t) {
-        TCtoken.Tokens tok = t.getTokenType();
+    private void checkIfAllLabelTargetsAreDefined(Program p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private Boolean isTypeToken(Token t) {
+        TCtoken.Tokens tok = (Tokens) t.getTokenType();
         return tok.equals(TCtoken.Tokens.INT) || tok.equals(TCtoken.Tokens.CHAR);
     }
 
-    private ToyCProgram program() {
+    private Program program() {
         List<Definition> definitionList = new ArrayList<>();
         while (isTypeToken(buff)) {
             definitionList.add(definition());
         }
         accept(TCtoken.Tokens.EOF);
 
-        return new ToyCProgram(definitionList);
+        return new Program(definitionList);
     }
 
     private Definition definition() {
@@ -140,13 +147,13 @@ public class TCparser implements Parser {
     }
 
     private FunctionHeader functionHeader() {
-        accept(TCtokens.Tokens.LPAREN);
+        accept(TCtoken.Tokens.LPAREN);
         FormalParamList fpl = null;
         if (isTypeToken(buff)) {
-        	paramlist<Param> = new List<Param>();
-            fpl = formalparamlist(paramlist);
+        	List<Param> paramlist = new ArrayList<Param>();
+            fpl = formalParamList(paramlist);
         }
-        accept(TCtokens.Tokens.RPAREN);
+        accept(TCtoken.Tokens.RPAREN);
 
         return new FunctionHeader(fpl);
     }
@@ -225,9 +232,14 @@ public class TCparser implements Parser {
     	return s;
     }
     
-    private CompoundStatement compoundStatement() {
-		ArrayList<Definition> dl = ArrayList<>();
-		ArrayList<Statement> sl = ArrayList<>();
+    private void enteringDEBUG(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private CompoundStatement compoundStatement() {
+		HashMap<Type, String> dl = new HashMap<Type, String>();
+		ArrayList<Statement> sl = new ArrayList<>();
 
     	accept(TCtoken.Tokens.LCURLY);
 		while (isTypeToken(buff))
@@ -235,11 +247,11 @@ public class TCparser implements Parser {
 			Type ty = type();
     		String id = acceptSave(TCtoken.Tokens.ID).getLexeme();
 			accept(TCtoken.Tokens.SEMICOLON);
-			dl.add(ty, id);
+			dl.put(ty, id);
 		}
 		while (!buff.getTokenType().equals(TCtoken.Tokens.RCURLY))
 		{
-			sl.add(Statement());	
+			sl.add(statement());	
 		}
 		accept(TCtoken.Tokens.RCURLY);
 
@@ -249,7 +261,7 @@ public class TCparser implements Parser {
     private IfStatement ifStatement() {
     	accept(TCtoken.Tokens.IF);
 		accept(TCtoken.Tokens.RPAREN);
-		Expression condition = expression();
+		Expression condition = expression(new ArrayList<Expression>());
 		accept(TCtoken.Tokens.LPAREN);
 		Statement ifs = statement();
 		if (buff.getTokenType().equals(TCtoken.Tokens.ELSE))
@@ -267,7 +279,7 @@ public class TCparser implements Parser {
     private WhileStatement whileStatement() {
     	accept(TCtoken.Tokens.WHILE);
 		accept(TCtoken.Tokens.RPAREN);
-		Expression condition = expression();
+		Expression condition = expression(new ArrayList<Expression>());
 		accept(TCtoken.Tokens.LPAREN);
 		Statement s = statement();
 
@@ -275,7 +287,7 @@ public class TCparser implements Parser {
     }
     
     private ReadStatement readStatement() {
-		ArrayList<String> ids = ArrayList<>();
+		ArrayList<String> ids = new ArrayList<String>();
 
 		accept(TCtoken.Tokens.READ);
 		accept(TCtoken.Tokens.RPAREN);
@@ -293,7 +305,7 @@ public class TCparser implements Parser {
     private WriteStatement writeStatement() {
     	accept(TCtoken.Tokens.WRITE);
     	accept(TCtoken.Tokens.LPAREN);
-    	ActualParameters ap = actualParameters(new List<Expression>());
+    	ActualParameters ap = actualParameters(new ArrayList<Expression>());
     	accept(TCtoken.Tokens.RPAREN);
     	accept(TCtoken.Tokens.SEMICOLON);
     	
@@ -301,14 +313,14 @@ public class TCparser implements Parser {
     }
     
     private ExpressionStatement expressionStatement() {
-    	Expression expr = expression(new List<RelopExpression>());
+    	Expression expr = expression(new ArrayList<Expression>());
     	accept(TCtoken.Tokens.SEMICOLON);
     	
     	return new ExpressionStatement(expr);
     }
     
-    private Expression expression(List<RelopExpression> reList) {
-    	reList.add(relopExpression(new List<SimpleExpression>()));
+    private Expression expression(List<Expression> reList) {
+    	reList.add(relopExpression(new ArrayList<Expression>()));
     	
     	if (buff.getTokenType().equals(TCtoken.Tokens.ASSIGNOP)) {
     		accept(TCtoken.Tokens.ASSIGNOP);
@@ -317,10 +329,11 @@ public class TCparser implements Parser {
     	else {
     		return new RelopExpression(reList);
     	}
+    	return new RelopExpression(reList);
     }
     
-    private RelopExpression relopExpression(List<SimpleExpression> seList) {
-    	seList.add(simpleExpression(new List<Term>()));
+    private RelopExpression relopExpression(List<Expression> seList) {
+    	seList.add(simpleExpression(new ArrayList<Term>()));
     	
     	if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.RELOP)) {
     		accept(TCtoken.Tokens.RELOP);
@@ -329,10 +342,11 @@ public class TCparser implements Parser {
     	else {
     		return new RelopExpression(seList);
     	}
+    	return new RelopExpression(seList);
     }
     
     private SimpleExpression simpleExpression(List<Term> termList) {
-    	termList.add(term(new List<Primary>()));
+    	termList.add(term(new ArrayList<Primary>()));
     	
     	if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.ADDOP)) {
     		accept(TCtoken.Tokens.ADDOP);
@@ -341,6 +355,7 @@ public class TCparser implements Parser {
     	else {
     		return new SimpleExpression(termList);
     	}
+    	return new SimpleExpression(termList);
     }
     
     private Term term(List<Primary> primList) {
@@ -352,13 +367,14 @@ public class TCparser implements Parser {
     	else {
         	return new Term(primList);
     	}
+    	return new Term(primList);
     }
     
     private Primary primary() {
     	switch((TCtoken.Tokens)buff.getTokenType()) {
     	
     		case ID:
-    			;
+    			accept(TCtoken.Tokens.ID);
     			break;
     		case NUMBER:
     			break;
@@ -368,32 +384,32 @@ public class TCparser implements Parser {
     			break;
     		case LPAREN:
     			accept(TCtoken.Tokens.LPAREN);
-    			Expression expr = expression();
+    			Expression expr = expression(new ArrayList<Expression>());
     			accept(TCtoken.Tokens.RPAREN);
-				return Expr(expr);
-    			break;
+				return new Primary(expr);
     		case NOT: 
     			Primary p = primary();
-    			break;
+    			return p;
     	}
     }
     
     private FunctionCall functionCall() {
     	accept(TCtoken.Tokens.LPAREN);
-    	ActualParameters ap = actualParameters(new List<Expression>());
+    	ActualParameters ap = actualParameters(new ArrayList<Expression>());
     	accept(TCtoken.Tokens.RPAREN);
     	return new FunctionCall(ap);
     }
     
     private ActualParameters actualParameters(List<Expression> params) {
-    	params.add(expression());
+    	params.add(expression(params));
     	
-    	if (scanner.getToken().getTokenType.equals(TCtoken.Tokens.COMMA)) {
+    	if (scanner.getToken().equals(TCtoken.Tokens.COMMA)) {
     		accept(TCtoken.Tokens.COMMA);
     		actualParameters(params);
     	}
     	else {
     		return new ActualParameters(params);
     	}
+    	return new ActualParameters(params);
     }
 }
