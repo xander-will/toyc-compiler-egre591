@@ -1,12 +1,13 @@
 package abstractSyntax;
 
+import java.util.List;
+
 import abstractSyntax.Definition;
-import parser.FunctionBody;
 
-public class FunctionDefinition implements Definition {
+public class FunctionDefinition extends Definition {
 
-	public FunctionDefinition(Type ty, String id, List<VariableDefinition> fpl, Statement s) {
-		// TODO Auto-generated constructor stub
+	public FunctionDefinition(Type ty, Identifier id, List<VariableDefinition> fd, Statement s) {
+		
 	}
 
 }

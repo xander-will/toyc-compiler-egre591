@@ -1,12 +1,14 @@
 package abstractSyntax;
 
 import abstractSyntax.Definition;
-import parser.FunctionBody;
 
-public class VariableDefinition implements Definition {
+public class VariableDefinition extends Definition {
 
-	public VariableDefinition(FunctionHeader fh, FunctionBody fb) {
-		// TODO Auto-generated constructor stub
+	private Type type;
+	private Identifier id;
+	
+	public VariableDefinition(Type ty, Identifier id) {
+		this.type = ty;
+		this.id = id;
 	}
-
 }

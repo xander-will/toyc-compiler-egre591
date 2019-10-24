@@ -1,13 +1,15 @@
 package abstractSyntax;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import abstractSyntax.Statement;
 
 public class ReadStatement implements Statement {
 
-	public ReadStatement(ArrayList<String> ids) {
-		// TODO Auto-generated constructor stub
+	private List<String> ids;
+	
+	public ReadStatement(List<String> ids) {
+		
 	}
 
 }

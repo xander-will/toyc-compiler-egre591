@@ -15,9 +15,6 @@ public class Program implements AbstractSyntax {
         statementList = l;
     }
 
-    public Program(List<Definition> definitionList) {
-		// TODO Auto-generated constructor stub
-	}
 
 	public String getName() { return name; }
     public List<Statement> getStatementList() { return statementList; }

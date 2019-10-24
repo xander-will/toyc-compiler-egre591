@@ -7,8 +7,10 @@ import abstractSyntax.SimpleExpression;
 
 public class RelopExpression implements Expression {
 
+	private List<Expression> seList;
+	
 	public RelopExpression(List<Expression> seList) {
-		// TODO Auto-generated constructor stub
+		this.seList = seList;
 	}
 
 }

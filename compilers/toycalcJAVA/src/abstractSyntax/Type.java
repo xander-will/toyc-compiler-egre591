@@ -2,8 +2,11 @@ package abstractSyntax;
 
 public class Type {
 
+	private String type;
+	
 	public Type(String ty) {
-		// TODO Auto-generated constructor stub
+		this.type = type;
+		
 	}
 
 }

@@ -4,8 +4,12 @@ import abstractSyntax.Statement;
 
 public class WhileStatement implements Statement {
 
+	private Expression condition;
+	private Statement statement;
+	
 	public WhileStatement(Expression condition, Statement s) {
-		// TODO Auto-generated constructor stub
+		this.condition = condition;
+		this.statement = statement;
 	}
 
 }

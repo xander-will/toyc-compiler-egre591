@@ -1,11 +1,17 @@
 package abstractSyntax;
 
+import java.util.List;
+
 import abstractSyntax.Expression;
 
-public class FunctionCall extends Expression {
+public class FunctionCall implements Expression {
 
+	private Identifier identifier;
+	private List<Expression> ap;
+	
 	public FunctionCall(Identifier id, List<Expression> ap) {
-		// TODO Auto-generated constructor stub
+		this.identifier = id;
+		this.ap = ap;
 	}
 
 }

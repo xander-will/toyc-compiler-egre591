@@ -4,8 +4,10 @@ import abstractSyntax.Statement;
 
 public class ExpressionStatement implements Statement {
 
+	private Expression expression;
+	
 	public ExpressionStatement(Expression expr) {
-		// TODO Auto-generated constructor stub
+		this.expression = expr;
 	}
 
 }

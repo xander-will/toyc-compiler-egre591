@@ -6,8 +6,10 @@ import abstractSyntax.Statement;
 
 public class SimpleExpression implements Expression {
 
-	public SimpleExpression(List<Term> termList) {
-		// TODO Auto-generated constructor stub
+	private List<Expression> termList;
+	
+	public SimpleExpression(List<Expression> termList) {
+		this.termList = termList;
 	}
 
 }

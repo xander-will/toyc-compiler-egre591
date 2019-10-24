@@ -6,8 +6,10 @@ import abstractSyntax.Expression;
 
 public class Term implements Expression {
 
-	public Term(List<Primary> primList) {
-		// TODO Auto-generated constructor stub
+	private List<Expression> primList;
+	
+	public Term(List<Expression> primList) {
+		this.primList = primList;
 	}
 
 }
