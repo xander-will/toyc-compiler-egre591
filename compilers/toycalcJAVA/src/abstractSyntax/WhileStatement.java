@@ -10,7 +10,7 @@ public class WhileStatement implements Statement {
 	
 	public WhileStatement(Expression condition, Statement s) {
 		this.condition = condition;
-		this.statement = statement;
+		this.statement = s;
 	}
 
 	public String toString() {

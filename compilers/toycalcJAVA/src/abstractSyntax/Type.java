@@ -5,7 +5,7 @@ public class Type {
 	private String type;
 	
 	public Type(String ty) {
-		this.type = type;
+		this.type = ty;
 	}
 
 	public String toString() {

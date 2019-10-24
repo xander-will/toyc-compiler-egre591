@@ -23,8 +23,8 @@ public class CompoundStatement implements Statement {
 		PrettyPrint.indent();
 		for (VariableDefinition d : definitionList)
 			s += PrettyPrint.spaces() + d.toString();
-		for (Statement s : statementList)
-			s += PrettyPrint.spaces() + s.toString();
+		for (Statement st : statementList)
+			s += PrettyPrint.spaces() + st.toString();
 		PrettyPrint.outdent();
 		s += ")\n";
 

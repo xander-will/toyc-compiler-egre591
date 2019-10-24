@@ -24,10 +24,10 @@ public class IfStatement implements Statement {
 	public String toString() {
 		String s = "if(\n";
 		PrettyPrint.indent();
-		s += PrettyPrint.spaces() + "cond = " condition.toString();
-		s += PrettyPrint.spaces() + "then = " ifs.toString();
+		s += PrettyPrint.spaces() + "cond = " + condition.toString();
+		s += PrettyPrint.spaces() + "then = " + ifs.toString();
 		if (els != null)
-			s += PrettyPrint.spaces() + "else = " els.toString();
+			s += PrettyPrint.spaces() + "else = " + els.toString();
 		PrettyPrint.outdent();
 
 		return s;

@@ -1,6 +1,9 @@
 package abstractSyntax;
 
 import compilers.AbstractSyntax;
+
+import java.util.List;
+
 import abstractSyntax.Definition;
 import abstractSyntax.PrettyPrint;
 

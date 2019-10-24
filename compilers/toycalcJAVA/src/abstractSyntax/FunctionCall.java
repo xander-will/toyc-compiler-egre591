@@ -7,19 +7,19 @@ import abstractSyntax.PrettyPrint;
 
 public class FunctionCall implements Expression {
 
-	private Identifier identifier;
+	private Identifier id;
 	private List<Expression> ap;
 	
 	public FunctionCall(Identifier id, List<Expression> ap) {
-		this.identifier = id;
+		this.id = id;
 		this.ap = ap;
 	}
 
 	public String toString() {
 		if (ap.isEmpty())
-			return "funcCall(" + id.toString() ")\n";
+			return "funcCall(" + id.toString() + ")\n";
 			
-		String s = "funcCall(" + id.toString() ") (\n";
+		String s = "funcCall(" + id.toString() + ") (\n";
 		PrettyPrint.indent();
 		for (Expression e : ap)
 			s += PrettyPrint.spaces() + e.toString();

@@ -1,5 +1,6 @@
 package abstractSyntax;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import abstractSyntax.Statement;
@@ -9,7 +10,7 @@ public class ReadStatement implements Statement {
 
 	private List<Identifier> ids;
 	
-	public ReadStatement(List<Identifier> ids) {
+	public ReadStatement(ArrayList<Identifier> ids) {
 		this.ids = ids;
 	}
 
