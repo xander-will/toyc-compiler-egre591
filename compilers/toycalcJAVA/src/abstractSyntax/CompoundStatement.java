@@ -26,7 +26,7 @@ public class CompoundStatement implements Statement {
 		for (Statement st : statementList)
 			s += PrettyPrint.spaces() + st.toString();
 		PrettyPrint.outdent();
-		s += ")\n";
+		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
 	}

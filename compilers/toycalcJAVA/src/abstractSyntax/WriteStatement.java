@@ -19,7 +19,7 @@ public class WriteStatement implements Statement {
 		for (Expression e : ap)
 			s += PrettyPrint.spaces() + e.toString();
 		PrettyPrint.outdent();
-		s += ")\n";
+		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
 	}

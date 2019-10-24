@@ -15,16 +15,21 @@ public class FunctionCall implements Expression {
 		this.ap = ap;
 	}
 
-	public String toString() {
-		if (ap.isEmpty())
-			return "funcCall(" + id.toString() + ")\n";
-			
-		String s = "funcCall(" + id.toString() + ") (\n";
+	public String toString() {			
+		String s = "funcCall(\n";
 		PrettyPrint.indent();
-		for (Expression e : ap)
-			s += PrettyPrint.spaces() + e.toString();
+		s += PrettyPrint.spaces() + "name = " + id.toString(); 
+		if (!ap.isEmpty())
+		{
+			s += PrettyPrint.spaces() + "args(\n";
+			PrettyPrint.indent();
+			for (Expression e : ap)
+				s += PrettyPrint.spaces() + e.toString();
+			PrettyPrint.outdent();
+			s += PrettyPrint.spaces() + ")\n";
+		}
 		PrettyPrint.outdent();
-		s += ")\n";
+		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
 	}

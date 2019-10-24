@@ -1,6 +1,7 @@
 package abstractSyntax;
 
 import abstractSyntax.Definition;
+import abstractSyntax.PrettyPrint;
 
 public class VariableDefinition extends Definition {
 
@@ -13,6 +14,12 @@ public class VariableDefinition extends Definition {
 	}
 
 	public String toString() {
-		return "varDef(" + type.toString() + id.toString() + ")\n";
+		String s = "varDef(\n";
+		PrettyPrint.indent();
+		s += PrettyPrint.spaces() + "type = " + type.toString();
+		s += PrettyPrint.spaces() + "id = " + id.toString();
+		PrettyPrint.outdent();
+		s += PrettyPrint.spaces() + ")\n";
+		return s;
 	}
 }

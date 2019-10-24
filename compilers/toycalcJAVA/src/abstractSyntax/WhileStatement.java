@@ -19,7 +19,7 @@ public class WhileStatement implements Statement {
 		s += PrettyPrint.spaces() + "cond = " + condition.toString();
 		s += PrettyPrint.spaces() + "statement = " + statement.toString();
 		PrettyPrint.outdent();
-		s += ")\n";
+		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
 	}

@@ -36,10 +36,6 @@ public class tc {
             Parser parser = new TCparser(scanner);
             TCglobals.ast = parser.parse();
 
-            while ((scanner.getToken().getTokenType()) != TCtoken.Tokens.EOF) {
-
-            }
-
             if (TCglobals.astDump) {
                 TCoutput.dumpAST(TCglobals.ast);
             }

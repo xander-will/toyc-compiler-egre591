@@ -10,18 +10,20 @@ public class FunctionDefinition extends Definition {
 	Type ty;
 	Identifier id;
 	List<VariableDefinition> fd;
-	Statement s;
+	Statement st;
 
 	public FunctionDefinition(Type ty, Identifier id, List<VariableDefinition> fd, Statement s) {
 		this.ty = ty;
 		this.id = id;
 		this.fd = fd;
-		this.s = s;
+		this.st = s;
 	}
 
 	public String toString() {
-		String s = "funcDef(" + ty.toString() + id.toString() + ") (\n";
+		String s = "funcDef(\n";
 		PrettyPrint.indent();
+		s += PrettyPrint.spaces() + "type = " + ty.toString();
+		s += PrettyPrint.spaces() + "name = " + id.toString();
 		if (!fd.isEmpty())
 		{
 			s += PrettyPrint.spaces() + "args(\n";
@@ -31,8 +33,9 @@ public class FunctionDefinition extends Definition {
 			PrettyPrint.outdent();
 			s += PrettyPrint.spaces() + ")\n";
 		}
-		s += PrettyPrint.spaces() + s.toString();
+		s += PrettyPrint.spaces() + "code = " + st.toString();
 		PrettyPrint.outdent();
+		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
 	}
