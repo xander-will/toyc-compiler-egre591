@@ -452,15 +452,12 @@ public class TCparser implements Parser {
 			return expr;
 		case NOT:
 			exitingDEBUG("primary");
-			return new Not(expression());
+			return new Not(primary());
 		case ADDOP:
-			Expression p = primary();
 			if (sw.getLexeme().equals("-")) {
 				exitingDEBUG("primary");
-				return new Minus(expression());
+				return new Minus(primary());
 			}
-			exitingDEBUG("primary");
-			return p;
 		default:
 			TCoutput.reportSYNTAX_ERROR(scanner, "unrecognized primary");
 			return null;
@@ -468,9 +465,12 @@ public class TCparser implements Parser {
 	}
 
 	private List<Expression> functionCall() {
+		List<Expression> ap = new ArrayList<>();
+
 		enteringDEBUG("functionCall");
 		accept(TCtoken.Tokens.LPAREN);
-		List<Expression> ap = actualParameters(new ArrayList<Expression>());
+		if (!buff.getTokenType().equals(TCtoken.Tokens.RPAREN))
+			ap = actualParameters(ap);
 		accept(TCtoken.Tokens.RPAREN);
 		exitingDEBUG("functionCall");
 		return ap;
