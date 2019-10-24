@@ -24,10 +24,10 @@ import java.io.FileNotFoundException;
 public class TCscanner implements Lexer {
 
     private Scanner s;
-    private String line=null;
+    private String line = null;
     private static int pos = 0;
     private static int lineNum = 0;
-    private String lexeme = ""; 
+    private String lexeme = "";
 
     private static final char EOFCHAR = '\0'; // arbitrary non-printing char
 
@@ -35,19 +35,20 @@ public class TCscanner implements Lexer {
 
     public TCscanner(String filename) throws FileNotFoundException {
         TCglobals.inputFileName = filename;
-        try{
+        try {
             s = new Scanner(new File(filename));
-            charBuff = getChar(); 
-       } catch(FileNotFoundException e) {
-            throw new FileNotFoundException("source code file '"+filename+"' does not exist");
+            charBuff = getChar();
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("source code file '" + filename + "' does not exist");
         }
     }
 
     private String getNextLine() {
-	    String line = s.nextLine()+" "; // adding a space aids error reporting at end of line
-        pos = 0; lineNum++;
-//        if (TCglobals.verbose)
-//            TCoutput.reportDEBUG("","input",lineNum+": "+line);
+        String line = s.nextLine() + " "; // adding a space aids error reporting at end of line
+        pos = 0;
+        lineNum++;
+        // if (TCglobals.verbose)
+        // TCoutput.reportDEBUG("","input",lineNum+": "+line);
         return line;
     }
 
@@ -57,14 +58,13 @@ public class TCscanner implements Lexer {
     }
 
     private char getChar() {
-	    if (line == null || pos > line.length()-1) {
-	     if (!s.hasNext()) 
-	     {
-	    	 	return EOFCHAR;
-	     }
+        if (line == null || pos > line.length() - 1) {
+            if (!s.hasNext()) {
+                return EOFCHAR;
+            }
 
             line = getNextLine();
-	    }
+        }
 
         return line.charAt(pos++);
     }
@@ -72,7 +72,7 @@ public class TCscanner implements Lexer {
     public Token getToken() {
         Token t = StateStart();
 
-        if (TCglobals.verbose) {
+        if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 1) {
             String prefix = lineNum + "." + pos + " ";
             TCoutput.reportDEBUG(prefix, "SCANNER", t.toString());
         }
@@ -80,60 +80,60 @@ public class TCscanner implements Lexer {
         return t;
     }
 
-    private Token StateStart() {   // start state
+    private Token StateStart() { // start state
         lexeme = "";
 
         while (Character.isWhitespace(charBuff))
             charBuff = getChar();
 
         if (Character.isLetter(charBuff))
-            return StateID();    // keyword or id state
+            return StateID(); // keyword or id state
 
         if (charBuff == EOFCHAR)
             return new TCtoken(TCtoken.Tokens.EOF);
 
         if (Character.isDigit(charBuff))
-            return StateNumber();    // number state
+            return StateNumber(); // number state
 
         if (TCtoken.single_chars.containsKey(charBuff)) {
-        	TCtoken returnToken = new TCtoken(TCtoken.single_chars.get(charBuff), charBuff.toString());
+            TCtoken returnToken = new TCtoken(TCtoken.single_chars.get(charBuff), charBuff.toString());
             refresh();
             return returnToken;
         }
 
         switch (charBuff) {
-            case '/':
-                return StateForwardSlash();
-            case '\'':
-                return StateCharacter();
-            case '"':
-                return StateString();
-            case '|':
-                return StateOr();
-            case '=':
-                return StateEquals();
-            case '!':
-                return StateNot();
-            case '<':
-            case '>':
-                return StateRelational();
-            case '&':
-                return StateAnd();
-            default:
-                refresh();
-                return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
+        case '/':
+            return StateForwardSlash();
+        case '\'':
+            return StateCharacter();
+        case '"':
+            return StateString();
+        case '|':
+            return StateOr();
+        case '=':
+            return StateEquals();
+        case '!':
+            return StateNot();
+        case '<':
+        case '>':
+            return StateRelational();
+        case '&':
+            return StateAnd();
+        default:
+            refresh();
+            return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
         }
     }
 
-    private Token StateID() {    // keyword or ID state
+    private Token StateID() { // keyword or ID state
         refresh();
 
         while (Character.isLetterOrDigit(charBuff))
             refresh();
 
-        if (TCtoken.keywords.containsKey(lexeme))   // keyword
-            return new TCtoken(TCtoken.keywords.get(lexeme), lexeme); 
-        else    // ID
+        if (TCtoken.keywords.containsKey(lexeme)) // keyword
+            return new TCtoken(TCtoken.keywords.get(lexeme), lexeme);
+        else // ID
             return new TCtoken(TCtoken.Tokens.ID, lexeme);
     }
 
@@ -141,26 +141,25 @@ public class TCscanner implements Lexer {
         refresh();
 
         switch (charBuff) {
-            case '/':   // single-line comment
-                return StateSingleComment();
-            case '*':   // multi-line comment
-                return StateMultiComment();
-            default:    // division operator
-                return new TCtoken(TCtoken.Tokens.MULOP, lexeme);
+        case '/': // single-line comment
+            return StateSingleComment();
+        case '*': // multi-line comment
+            return StateMultiComment();
+        default: // division operator
+            return new TCtoken(TCtoken.Tokens.MULOP, lexeme);
         }
     }
 
-    private Token StateSingleComment() {    // single-line comment
-    	
-    	while(pos < line.length())
-    	{
-    		refresh();
-    	}
-    	
+    private Token StateSingleComment() { // single-line comment
+
+        while (pos < line.length()) {
+            refresh();
+        }
+
         return new TCtoken(TCtoken.Tokens.NONE);
     }
 
-    private Token StateMultiComment() {    // multi-line comment
+    private Token StateMultiComment() { // multi-line comment
         while ((charBuff = getChar()) != EOFCHAR) {
             if (charBuff == '/') {
                 if ((charBuff = getChar()) == '*') {
@@ -177,82 +176,85 @@ public class TCscanner implements Lexer {
 
         return new TCtoken(TCtoken.Tokens.ERROR);
     }
-    
-    private Token StateNumber() {    // number start state
+
+    private Token StateNumber() { // number start state
         refresh();
 
-        while (Character.isDigit(charBuff))
-        {
+        while (Character.isDigit(charBuff)) {
             refresh();
         }
-        
+
         switch (charBuff) {
-            case '.':
-                return StateDecimal();
-            case 'e': case 'E':
-                return StateExponent();
-            default:
-                return new TCtoken(TCtoken.Tokens.NUMBER, lexeme);
+        case '.':
+            return StateDecimal();
+        case 'e':
+        case 'E':
+            return StateExponent();
+        default:
+            return new TCtoken(TCtoken.Tokens.NUMBER, lexeme);
         }
     }
 
-    private Token StateDecimal() {    // decimal fraction state
+    private Token StateDecimal() { // decimal fraction state
         refresh();
 
         if (!Character.isDigit(charBuff)) {
             refresh();
-            return new TCtoken(TCtoken.Tokens.ERROR, lexeme);   // quickie solution... we should add a custom exception class for better error messages tho
+            return new TCtoken(TCtoken.Tokens.ERROR, lexeme); // quickie solution... we should add a custom exception
+                                                              // class for better error messages tho
         }
 
         while (Character.isDigit(charBuff))
             refresh();
 
         switch (charBuff) {
-            case 'e': case 'E':
-                return StateExponent();
-            default:
-                return new TCtoken(TCtoken.Tokens.NUMBER, lexeme);
+        case 'e':
+        case 'E':
+            return StateExponent();
+        default:
+            return new TCtoken(TCtoken.Tokens.NUMBER, lexeme);
         }
     }
 
-    private Token StateExponent() {   // exponent state
+    private Token StateExponent() { // exponent state
         refresh();
 
         switch (charBuff) {
-            case '+': case '-':
+        case '+':
+        case '-':
+            refresh();
+        default:
+            if (!Character.isDigit(charBuff)) {
                 refresh();
-            default:
-                if (!Character.isDigit(charBuff)) {
-                    refresh();
-                    return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
-                }
+                return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
+            }
         }
 
         while (Character.isDigit(charBuff))
             refresh();
-        
+
         return new TCtoken(TCtoken.Tokens.NUMBER, lexeme);
     }
 
-    private Token StateCharacter() {   // charliteral state
+    private Token StateCharacter() { // charliteral state
         refresh();
 
         switch (charBuff) {
-            case '\n':
+        case '\n':
+            return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
+        default:
+            refresh();
+            if (charBuff != '\'') {
+                refresh();
                 return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
-            default:
-                refresh();
-                if (charBuff != '\'') {
-                    refresh();
-                    return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
-                }
-            case '\'':
-                refresh();
-                return new TCtoken(TCtoken.Tokens.CHARLITERAL, lexeme);
+            }
+        case '\'':
+            refresh();
+            return new TCtoken(TCtoken.Tokens.CHARLITERAL, lexeme);
         }
     }
 
-    private Token StateString() {   // string state
+    private Token StateString() { // string state
         while (charBuff != '\n') {
             refresh();
             if (charBuff == '"') {
@@ -265,74 +267,71 @@ public class TCscanner implements Lexer {
         return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
     }
 
-    private Token StateOr() {   // boolean or operator (||)
+    private Token StateOr() { // boolean or operator (||)
         refresh();
 
         if (charBuff == '|') {
             refresh();
             return new TCtoken(TCtoken.Tokens.ADDOP, lexeme);
-        }
-        else
+        } else
             return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
     }
 
-    private Token StateAnd() {   // boolean and operator (&&)
+    private Token StateAnd() { // boolean and operator (&&)
         refresh();
 
         if (charBuff == '&') {
             refresh();
             return new TCtoken(TCtoken.Tokens.MULOP, lexeme);
-        }
-        else
+        } else
             return new TCtoken(TCtoken.Tokens.ERROR, lexeme);
     }
 
-    private Token StateEquals() {   // assign and boolean equals (= and ==)
+    private Token StateEquals() { // assign and boolean equals (= and ==)
         refresh();
 
         if (charBuff == '=') {
             refresh();
             return new TCtoken(TCtoken.Tokens.RELOP, lexeme);
-        }
-        else
+        } else
             return new TCtoken(TCtoken.Tokens.ASSIGNOP, lexeme);
     }
 
-    private Token StateNot() {   // negation and boolean not equals (! and !=)
+    private Token StateNot() { // negation and boolean not equals (! and !=)
         refresh();
 
         if (charBuff == '=') {
             refresh();
             return new TCtoken(TCtoken.Tokens.RELOP, lexeme);
-        }
-        else
-        {
+        } else {
             return new TCtoken(TCtoken.Tokens.NOT, lexeme);
         }
     }
 
-    private Token StateRelational() {   // relational operators (>, <, >=, <=)
+    private Token StateRelational() { // relational operators (>, <, >=, <=)
         refresh();
 
         if (charBuff == '=') {
             refresh();
             return new TCtoken(TCtoken.Tokens.RELOP, lexeme);
-        }
-        else
+        } else
             return new TCtoken(TCtoken.Tokens.RELOP, lexeme);
     }
 
-    public String getLine() { 
-        return line; 
+    public String getLine() {
+        return line;
     }
-    public String getLexeme() { 
-        return lexeme; 
+
+    public String getLexeme() {
+        return lexeme;
     }
-    public int getPos() { 
-        return pos; 
+
+    public int getPos() {
+        return pos;
     }
-    public int getLineNum() { 
-        return lineNum; 
+
+    public int getLineNum() {
+        return lineNum;
     }
 
 }
