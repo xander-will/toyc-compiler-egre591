@@ -1,6 +1,7 @@
 package abstractSyntax;
 
 import abstractSyntax.Statement;
+import abstractSyntax.PrettyPrint;
 
 public class IfStatement implements Statement {
 
@@ -18,6 +19,18 @@ public class IfStatement implements Statement {
 		this.condition = condition;
 		this.ifs = ifs;
 		this.els = els;
+	}
+
+	public String toString() {
+		String s = "if(\n";
+		PrettyPrint.indent();
+		s += PrettyPrint.spaces() + "cond = " condition.toString();
+		s += PrettyPrint.spaces() + "then = " ifs.toString();
+		if (els != null)
+			s += PrettyPrint.spaces() + "else = " els.toString();
+		PrettyPrint.outdent();
+
+		return s;
 	}
 
 }

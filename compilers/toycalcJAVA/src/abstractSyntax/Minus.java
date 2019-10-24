@@ -9,4 +9,8 @@ public class Minus implements Expression {
     public Minus(Expression e) {
     	this.expression = e;
     }
+
+    public String toString() {
+        return "negative " + expression.toString();
+    }
 }

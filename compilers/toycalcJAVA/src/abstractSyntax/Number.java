@@ -9,5 +9,9 @@ public class Number implements Expression {
     public Number(String num) {
     	this.number = num;
     }
+
+    public String toString() {
+        return "num(" + number + ")\n";
+    }
     
 }

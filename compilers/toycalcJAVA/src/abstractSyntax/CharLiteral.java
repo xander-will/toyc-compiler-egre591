@@ -9,5 +9,9 @@ public class CharLiteral implements Expression {
     public CharLiteral(String c) {
     	this.charLit = c;
     }
+
+    public String toString() {
+        return "charLiteral(" + charLit + ")\n";
+    }
     
 }

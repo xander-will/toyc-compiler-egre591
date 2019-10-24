@@ -1,6 +1,7 @@
 package abstractSyntax;
 
 import abstractSyntax.Statement;
+import abstractSyntax.PrettyPrint;
 
 public class WhileStatement implements Statement {
 
@@ -10,6 +11,17 @@ public class WhileStatement implements Statement {
 	public WhileStatement(Expression condition, Statement s) {
 		this.condition = condition;
 		this.statement = statement;
+	}
+
+	public String toString() {
+		String s = "while(\n";
+		PrettyPrint.indent();
+		s += PrettyPrint.spaces() + "cond = " + condition.toString();
+		s += PrettyPrint.spaces() + "statement = " + statement.toString();
+		PrettyPrint.outdent();
+		s += ")\n";
+
+		return s;
 	}
 
 }

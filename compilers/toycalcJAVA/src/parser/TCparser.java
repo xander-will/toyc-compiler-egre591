@@ -268,15 +268,15 @@ public class TCparser implements Parser {
     }
     
     private ReadStatement readStatement() {
-		ArrayList<String> ids = new ArrayList<String>();
+		ArrayList<Identifier> ids = new ArrayList<>();
 
 		accept(TCtoken.Tokens.READ);
 		accept(TCtoken.Tokens.RPAREN);
-		ids.add(acceptSave(TCtoken.Tokens.ID).getLexeme());
+		ids.add(identifier());
 		while (buff.getTokenType().equals(TCtoken.Tokens.COMMA))
 		{
 			accept(TCtoken.Tokens.COMMA);
-			ids.add(acceptSave(TCtoken.Tokens.ID).getLexeme());
+			ids.add(identifier());
 		}
 		accept(TCtoken.Tokens.LPAREN);
 
@@ -295,8 +295,10 @@ public class TCparser implements Parser {
 
 	private ReturnStatement returnStatement() {
 		accept(TCtoken.Tokens.RETURN);
-		Expression expr = expression();
-
+		Expression expr = null;
+		if (!buff.getTokenType().equals(TCtoken.Tokens.SEMICOLON))
+			expr = expression();
+		accept(TCtoken.Tokens.SEMICOLON);
 		return new ReturnStatement(expr);
 	}
 
@@ -393,14 +395,10 @@ public class TCparser implements Parser {
     			accept(TCtoken.Tokens.RPAREN);
 				return new Primary(expr);
     		case NOT:
-    			Expression p = primary();
-				p.setNot();
-    			return p;
+    			return new Not(expression);
 			case ADDOP:
-				Expression p = primary();
 				if (sw.getLexeme().equals("-"))
-					p.setMinus();
-				return p;
+					return new Minus(expression());
     	}
     }
     

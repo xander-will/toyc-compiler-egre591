@@ -6,7 +6,9 @@ public class Type {
 	
 	public Type(String ty) {
 		this.type = type;
-		
 	}
 
+	public String toString() {
+		return "type(" + type + ")";
+	}
 }

@@ -9,5 +9,9 @@ public class StringLiteral implements Expression {
     public StringLiteral(String s) {
     	this.stringBody = s;
     }
+
+    public String toString() {
+        return "stringLit(" + stringBody + ")\n";
+    }
     
 }

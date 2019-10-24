@@ -10,4 +10,8 @@ public class ExpressionStatement implements Statement {
 		this.expression = expr;
 	}
 
+	public String toString() {
+		return expression.toString();
+	}
+
 }

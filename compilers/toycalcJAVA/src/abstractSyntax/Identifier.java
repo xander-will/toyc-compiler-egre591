@@ -10,4 +10,7 @@ public class Identifier implements Expression {
     	this.name = name;
     }
 
+    public String toString() {
+        return "id(" + name + ")";
+    }
 }

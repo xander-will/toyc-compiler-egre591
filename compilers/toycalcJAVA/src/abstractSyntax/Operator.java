@@ -8,4 +8,8 @@ public class Operator {
     	this.operator = op;
     }
 
+    public String toString() {
+        return "operator(" + operator + ")\n";
+    }
+
 }

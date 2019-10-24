@@ -11,4 +11,8 @@ public class VariableDefinition extends Definition {
 		this.type = ty;
 		this.id = id;
 	}
+
+	public String toString() {
+		return "varDef(" + type.toString() + id.toString() + ")\n";
+	}
 }

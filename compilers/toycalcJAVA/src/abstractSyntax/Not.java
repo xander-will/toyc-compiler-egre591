@@ -9,4 +9,8 @@ public class Not implements Expression {
     public Not(Expression e) {
     	this.expression = e;
     }
+
+    public String toString() {
+        return "not " + expression.toString();
+    }
 }
