@@ -1,11 +1,8 @@
 package symTable;
 
-import compilers.Symbol;
-import compilers.SymbolTable;
 import symTable.Attributes;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class TCsymTable {
 

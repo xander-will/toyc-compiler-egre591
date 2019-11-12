@@ -24,10 +24,11 @@ public class Attributes {
 
     @Override
     public boolean equals(Attributes at) {
-        if (this.st == at.st && this.dt == at.dt && this.symbolTable == at.symbolTable)
+        if (this.st == at.st && this.dt == at.dt && this.symbolTable == at.symbolTable) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     @Override
