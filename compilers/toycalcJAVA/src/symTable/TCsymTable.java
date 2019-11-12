@@ -2,36 +2,58 @@ package symTable;
 
 import compilers.Symbol;
 import compilers.SymbolTable;
+import symTable.Attributes;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
-public class TCsymTable implements SymbolTable{
+public class TCsymTable {
 
-    private List<Symbol> st;
+    private HashMap<String, Attributes> st;
 
-    public TCsymTable() { st = new ArrayList<Symbol>(); }
+    public TCsymTable() {
+        st = new HashMap<String, Attributes>();
+    }
 
-    public Symbol add(String id){
-        TCsymbol sym;
-        if ((sym=(TCsymbol)find(id)) == null) {
-            st.add(sym=new TCsymbol(id));
-            sym.attribs = new EnumMap<TCsymbol.Attributes,Object>(TCsymbol.Attributes.class);
+    public void add(String id, Attributes attr) {
+        this.st.put(id, attr);
+    }
+
+    public Attributes get(String id) {
+        if (this.st.containsKey(id))
+            return this.st.get(id);
+        else
+            return null;
+    }
+
+    public boolean containsId(String id) {
+        if (this.st.containsKey(id))
+            return true;
+        else
+            return false;
+    }
+
+    public void print() {
+        System.out.println(toString());
+    }
+
+    @Override
+    public String toString() {
+        String string = "";
+        for (String s : this.st.keySet()) {
+            string += "[" + s + "] : " + this.st.get(s).toString() + "\n";
         }
-        return sym;
+
+        return string;
     }
 
-    public Symbol find(String id) {
-        Iterator<Symbol> itr = st.iterator();
-        TCsymbol sym;
-        while(itr.hasNext())
-            if (((sym=(TCsymbol)itr.next())).getId().equals(id))
-                return sym;
-        return null;
-    }
+    // public class Symbol {
+    // private String id;
+    // private Attributes attributes;
 
-    public String toString() { return st+"\n"; }
-
+    // public Symbol(String id, Attributes attributes) {
+    // this.id = id;
+    // this.attributes = attributes;
+    // }
+    // }
 }
