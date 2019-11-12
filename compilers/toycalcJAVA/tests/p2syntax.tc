@@ -1,2 +1,26 @@
-int j;
-j=4;
+int isEven(int n){
+	if ( (n % 2) == 0)
+		return 1;
+	else
+		return 0;
+}
+int main() {
+	int i;
+	int n;
+	read(i, n);
+	while (i <= n) {
+		write(i);
+		if ( isEven(i) )
+			write(" is even");
+		else
+			write(" is odd");
+		newline;
+		i = i + 1;
+	}
+	n = n ** 10 + 2;
+	n = 2 / 3;
+	2 < 3 < 4 < 5;
+	x = "";
+	
+	return;
+}

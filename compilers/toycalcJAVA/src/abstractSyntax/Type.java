@@ -9,6 +9,6 @@ public class Type {
 	}
 
 	public String toString() {
-		return "type(" + type + ")";
+		return "type(" + type + ")\n";
 	}
 }

@@ -23,7 +23,7 @@ public class Program implements AbstractSyntax {
 		for (Definition d : dl)
 			s += PrettyPrint.spaces() + d.toString();
 		PrettyPrint.outdent();
-		s += ")\n";
+		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
     }

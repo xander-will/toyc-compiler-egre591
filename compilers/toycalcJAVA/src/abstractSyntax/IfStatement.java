@@ -29,6 +29,7 @@ public class IfStatement implements Statement {
 		if (els != null)
 			s += PrettyPrint.spaces() + "else = " + els.toString();
 		PrettyPrint.outdent();
+		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
 	}

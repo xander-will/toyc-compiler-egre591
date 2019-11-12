@@ -18,11 +18,11 @@ public class Expr implements Expression {
 	public String toString() {
 		String s = "expr(\n";
 		PrettyPrint.indent();
-		s += PrettyPrint.spaces() + left.toString();
-		s += PrettyPrint.spaces() + operator.toString();
-		s += PrettyPrint.spaces() + right.toString();
+		s += PrettyPrint.spaces() + "left = " + left.toString();
+		s += PrettyPrint.spaces() + "op = " + operator.toString();
+		s += PrettyPrint.spaces() + "right = " + right.toString();
 		PrettyPrint.outdent();
-		s += ")\n";
+		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
 	}

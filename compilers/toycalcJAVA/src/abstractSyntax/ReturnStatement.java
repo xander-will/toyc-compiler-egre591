@@ -16,9 +16,9 @@ public class ReturnStatement implements Statement {
             return "return()\n";
         String s = "return(\n";
         PrettyPrint.indent();
-        s += PrettyPrint.spaces() + expression.toString();
+        s += PrettyPrint.spaces() + expression.toString() + "\n";
         PrettyPrint.outdent();
-        s += ")\n";
+        s += PrettyPrint.spaces() + ")\n";
 
         return s;
     }

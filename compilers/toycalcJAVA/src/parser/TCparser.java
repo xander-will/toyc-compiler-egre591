@@ -94,7 +94,7 @@ public class TCparser implements Parser {
 
 	private void exitingDEBUG(String string) {
 		if (verbose || debugLevel == 2 || debugLevel == 0)
-			System.out.println("[PARSER] EXITING [" + string + "]");
+			System.err.println("[PARSER] EXITING [" + string + "]");
 	}
 
 	public AbstractSyntax parse() {
@@ -177,8 +177,9 @@ public class TCparser implements Parser {
 
 	private Identifier identifier() {
 		enteringDEBUG("identifier");
+		Identifier id = new Identifier(acceptSave(TCtoken.Tokens.ID).getLexeme());
 		exitingDEBUG("identifier");
-		return new Identifier(acceptSave(TCtoken.Tokens.ID).getLexeme());
+		return id;
 	}
 
 	private Statement statement() {
@@ -277,9 +278,9 @@ public class TCparser implements Parser {
 	private IfStatement ifStatement() {
 		enteringDEBUG("ifStatement");
 		accept(TCtoken.Tokens.IF);
-		accept(TCtoken.Tokens.RPAREN);
-		Expression condition = expression();
 		accept(TCtoken.Tokens.LPAREN);
+		Expression condition = expression();
+		accept(TCtoken.Tokens.RPAREN);
 		Statement ifs = statement();
 		if (buff.getTokenType().equals(TCtoken.Tokens.ELSE)) {
 			accept(TCtoken.Tokens.ELSE);
@@ -295,9 +296,9 @@ public class TCparser implements Parser {
 	private WhileStatement whileStatement() {
 		enteringDEBUG("whileStatement");
 		accept(TCtoken.Tokens.WHILE);
-		accept(TCtoken.Tokens.RPAREN);
-		Expression condition = expression();
 		accept(TCtoken.Tokens.LPAREN);
+		Expression condition = expression();
+		accept(TCtoken.Tokens.RPAREN);
 		Statement s = statement();
 
 		exitingDEBUG("whileStatement");
@@ -309,13 +310,14 @@ public class TCparser implements Parser {
 		ArrayList<Identifier> ids = new ArrayList<Identifier>();
 
 		accept(TCtoken.Tokens.READ);
-		accept(TCtoken.Tokens.RPAREN);
-		ids.add(new Identifier(acceptSave(TCtoken.Tokens.ID).getLexeme()));
+		accept(TCtoken.Tokens.LPAREN);
+		ids.add(identifier());
 		while (buff.getTokenType().equals(TCtoken.Tokens.COMMA)) {
 			accept(TCtoken.Tokens.COMMA);
-			ids.add(new Identifier(acceptSave(TCtoken.Tokens.ID).getLexeme()));
+			ids.add(identifier());
 		}
-		accept(TCtoken.Tokens.LPAREN);
+		accept(TCtoken.Tokens.RPAREN);
+		accept(TCtoken.Tokens.SEMICOLON);
 
 		exitingDEBUG("readStatement");
 		return new ReadStatement(ids);
@@ -333,9 +335,11 @@ public class TCparser implements Parser {
 	}
 
 	private ReturnStatement returnStatement() {
+		Expression expr = null;
 		enteringDEBUG("returnStatement");
 		accept(TCtoken.Tokens.RETURN);
-		Expression expr = expression();
+		if (!buff.getTokenType().equals(TCtoken.Tokens.SEMICOLON))
+			expr = expression();
 		accept(TCtoken.Tokens.SEMICOLON);
 		exitingDEBUG("returnStatement");
 		return new ReturnStatement(expr);
@@ -377,8 +381,8 @@ public class TCparser implements Parser {
 	private Expression relopExpression() {
 		enteringDEBUG("relopExpression");
 		Expression left = simpleExpression();
-		if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.RELOP)) {
-			Operator op = operator(TCtoken.Tokens.ASSIGNOP);
+		if (buff.getTokenType().equals(TCtoken.Tokens.RELOP)) {
+			Operator op = operator(TCtoken.Tokens.RELOP);
 			Expression right = relopExpression();
 			exitingDEBUG("relopExpression");
 			return new Expr(op, left, right);
@@ -391,9 +395,9 @@ public class TCparser implements Parser {
 	private Expression simpleExpression() {
 		Expression left = term();
 		enteringDEBUG("simpleExpression");
-		if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.ADDOP)) {
-			Operator op = operator(TCtoken.Tokens.ASSIGNOP);
-			Expression right = relopExpression();
+		if (buff.getTokenType().equals(TCtoken.Tokens.ADDOP)) {
+			Operator op = operator(TCtoken.Tokens.ADDOP);
+			Expression right = simpleExpression();
 			exitingDEBUG("simpleExpression");
 			return new Expr(op, left, right);
 		} else {
@@ -405,8 +409,8 @@ public class TCparser implements Parser {
 	private Expression term() {
 		enteringDEBUG("term");
 		Expression left = primary();
-		if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.MULOP)) {
-			Operator op = operator(TCtoken.Tokens.ASSIGNOP);
+		if (buff.getTokenType().equals(TCtoken.Tokens.MULOP)) {
+			Operator op = operator(TCtoken.Tokens.MULOP);
 			Expression right = term();
 			exitingDEBUG("term");
 			return new Expr(op, left, right);
@@ -458,7 +462,7 @@ public class TCparser implements Parser {
 			exitingDEBUG("primary");
 			return p;
 		default:
-			exitingDEBUG("primary");
+			TCoutput.reportSYNTAX_ERROR(scanner, "unrecognized primary");
 			return null;
 		}
 	}
@@ -476,7 +480,7 @@ public class TCparser implements Parser {
 		enteringDEBUG("actualParameters");
 		params.add(expression());
 
-		if (scanner.getToken().getTokenType().equals(TCtoken.Tokens.COMMA)) {
+		if (buff.getTokenType().equals(TCtoken.Tokens.COMMA)) {
 			accept(TCtoken.Tokens.COMMA);
 			actualParameters(params);
 		}

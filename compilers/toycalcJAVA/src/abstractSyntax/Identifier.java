@@ -11,6 +11,6 @@ public class Identifier implements Expression {
     }
 
     public String toString() {
-        return "id(" + name + ")";
+        return "id(" + name + ")\n";
     }
 }

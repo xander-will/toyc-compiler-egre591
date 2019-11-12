@@ -5,6 +5,7 @@ import java.util.List;
 
 import abstractSyntax.Statement;
 import abstractSyntax.Identifier;
+import abstractSyntax.PrettyPrint;
 
 public class ReadStatement implements Statement {
 
@@ -15,10 +16,12 @@ public class ReadStatement implements Statement {
 	}
 
 	public String toString() {
-		String s = "read(";
+		String s = "read(\n";
+		PrettyPrint.indent();
 		for (Identifier id : ids)
-			s += id.toString() + ",";
-		s += ")\n";
+			s += PrettyPrint.spaces() + id.toString();
+		PrettyPrint.outdent();
+		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
 	}
