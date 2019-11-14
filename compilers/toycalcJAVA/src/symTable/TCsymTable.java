@@ -21,10 +21,7 @@ public class TCsymTable implements SymbolTable {
     }
 
     public Attributes get(String id) {
-        if (this.st.containsKey(id))
-            return this.st.get(id);
-        else
-            return null;
+        return this.st.get(id);
     }
 
     public boolean containsId(String id) {

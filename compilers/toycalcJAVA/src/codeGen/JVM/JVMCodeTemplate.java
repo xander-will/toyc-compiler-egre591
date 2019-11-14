@@ -44,4 +44,18 @@ public class JVMCodeTemplate implements CodeTemplate {
         return s;
     }
 
+    public String loadVar(Integer id) {
+        if (0 <= id && id <= 3)
+            return "\tiload_" + id.toString() + "\n";
+        else
+            return "iload " + id.toString() + "\n";
+    }
+
+    public String storeVar(Integer id) {
+        if (0 <= id && id <= 3)
+            return "\tistore_" + id.toString() + "\n";
+        else
+            return "istore " + id.toString() + "\n";
+    }
+
 }
