@@ -8,7 +8,7 @@ public class IfStatement implements Statement {
 	private Expression condition;
 	private Statement ifs;
 	private Statement els;
-	
+
 	public IfStatement(Expression condition, Statement ifs) {
 		this.condition = condition;
 		this.ifs = ifs;
@@ -32,6 +32,11 @@ public class IfStatement implements Statement {
 		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
+	}
+
+	@Override
+	public String generateCode() {
+		return "";
 	}
 
 }

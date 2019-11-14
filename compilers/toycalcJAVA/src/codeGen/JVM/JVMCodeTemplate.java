@@ -28,7 +28,7 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String function(String name, String args, String body) {
-        String fh = functionHeader(10, 10);     // hardcoded for convenience (toyCalc does this as well)
+        String fh = functionHeader(10, 10); // hardcoded for convenience (toyCalcdoes this as well)
         return functionWrapper(name, args, fh + body);
     }
 
@@ -69,11 +69,11 @@ public class JVMCodeTemplate implements CodeTemplate {
         op_table.put("/", "idiv");
     }
 
-    public String operation(String op) {
+    public String operator(String op) {
         return "\t" + op_table.get(op) + "\n";
     }
 
-    public String return() {
+    public String returnString() {
         return "\treturn\n";
     }
 

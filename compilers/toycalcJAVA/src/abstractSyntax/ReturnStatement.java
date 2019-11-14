@@ -7,15 +7,15 @@ import globals.TCglobals;
 
 public class ReturnStatement implements Statement {
 
-	private Expression expression;
-	
+    private Expression expression;
+
     public ReturnStatement(Expression expr) {
         this.expression = expr;
     }
 
     public String generateCode() {
         String s = expression.generateCode();
-        s += TCglobals.codetemplate.return();
+        s += TCglobals.codetemplate.returnString();
         return s;
     }
 

@@ -4,13 +4,19 @@ import abstractSyntax.Expression;
 
 public class Not implements Expression {
 
-	private Expression expression;
-	
+    private Expression expression;
+
     public Not(Expression e) {
-    	this.expression = e;
+        this.expression = e;
     }
 
     public String toString() {
         return "not " + expression.toString();
     }
+
+    @Override
+    public String generateCode() {
+        return "";
+    }
+
 }

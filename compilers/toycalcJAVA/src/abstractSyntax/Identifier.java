@@ -1,15 +1,16 @@
 package abstractSyntax;
 
 import abstractSyntax.Expression;
+import codeGen.JVM.JVMCodeTemplate;
 import globals.TCglobals;
 import output.TCoutput;
 
 public class Identifier implements Expression {
 
-	private String name;
-	
+    private String name;
+
     public Identifier(String name) {
-    	this.name = name;
+        this.name = name;
     }
 
     public int getID() {
@@ -17,17 +18,17 @@ public class Identifier implements Expression {
         if (TCglobals.localsymtable != null) {
             try {
                 id = TCglobals.localsymtable.get(name).getID();
+            } catch (Exception e) {
             }
-            catch(Exception e) {}
         }
         if (id == -1) {
             try {
                 id = TCglobals.symtable.get(name).getID();
-            }
-            catch(Exception e) {
-                TCoutput.reportSEMANTIC_ERROR("", "Call on variable " + name " that was not initialized.");
+            } catch (Exception e) {
+                TCoutput.reportSEMANTIC_ERROR("", "Call on variable " + name + " that was not initialized.");
             }
         }
+        return id;
     }
 
     public String generateLoad() {
@@ -37,9 +38,11 @@ public class Identifier implements Expression {
 
     public String generateStore() {
         int id = getID();
+        TCglobals.codetemplate.function("", "", "");
         return TCglobals.codetemplate.storeVar(id);
     }
 
+    @Override
     public String generateCode() {
         return generateLoad();
     }

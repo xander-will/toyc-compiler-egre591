@@ -9,6 +9,7 @@ public class Attributes implements AttributesInterface {
     public static enum SemanticType {
         VARIABLE, FUNCTION
     };
+
     private static HashMap<String, SemanticType> st_map;
     static {
         st_map = new HashMap<>();
@@ -19,11 +20,12 @@ public class Attributes implements AttributesInterface {
     public static enum DataType {
         INT, CHAR
     };
+
     private static HashMap<String, DataType> dt_map;
     static {
         dt_map = new HashMap<>();
-        dt_map.put("int", SemanticType.INT);
-        dt_map.put("char", SemanticType.CHAR);
+        dt_map.put("int", DataType.INT);
+        dt_map.put("char", DataType.CHAR);
     }
 
     private SemanticType st;
@@ -49,7 +51,8 @@ public class Attributes implements AttributesInterface {
         }
     }
 
-    public SymbolTable getSymTable() {
+    @Override
+    public SymbolTable getSymtable() {
         return symbolTable;
     }
 

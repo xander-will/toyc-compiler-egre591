@@ -6,7 +6,7 @@ import abstractSyntax.Statement;
 import abstractSyntax.PrettyPrint;
 
 public class WriteStatement implements Statement {
-	
+
 	private List<Expression> ap;
 
 	public WriteStatement(List<Expression> ap) {
@@ -22,6 +22,11 @@ public class WriteStatement implements Statement {
 		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
+	}
+
+	@Override
+	public String generateCode() {
+		return "";
 	}
 
 }

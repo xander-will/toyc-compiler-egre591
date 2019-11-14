@@ -4,13 +4,18 @@ import abstractSyntax.Expression;
 
 public class Minus implements Expression {
 
-	private Expression expression;
-	
+    private Expression expression;
+
     public Minus(Expression e) {
-    	this.expression = e;
+        this.expression = e;
     }
 
     public String toString() {
         return "negative " + expression.toString();
+    }
+
+    @Override
+    public String generateCode() {
+        return "";
     }
 }

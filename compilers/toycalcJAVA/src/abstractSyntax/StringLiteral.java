@@ -4,14 +4,18 @@ import abstractSyntax.Expression;
 
 public class StringLiteral implements Expression {
 
-	private String stringBody;
-	
+    private String stringBody;
+
     public StringLiteral(String s) {
-    	this.stringBody = s;
+        this.stringBody = s;
     }
 
     public String toString() {
         return "stringLit(" + stringBody + ")\n";
     }
-    
+
+    @Override
+    public String generateCode() {
+        return "";
+    }
 }

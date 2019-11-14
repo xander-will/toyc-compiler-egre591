@@ -27,7 +27,7 @@ public class FunctionDefinition extends Definition {
 
 	public String generateCode() {
 		String name = id.getName();
-		String args = "[Ljava/lang/String;"
+		String args = "[Ljava/lang/String;";
 		String body = st.generateCode();
 
 		return TCglobals.codetemplate.function(name, args, body);
@@ -38,8 +38,7 @@ public class FunctionDefinition extends Definition {
 		PrettyPrint.indent();
 		s += PrettyPrint.spaces() + "type = " + ty.toString();
 		s += PrettyPrint.spaces() + "name = " + id.toString();
-		if (!fd.isEmpty())
-		{
+		if (!fd.isEmpty()) {
 			s += PrettyPrint.spaces() + "args(\n";
 			PrettyPrint.indent();
 			for (VariableDefinition vd : fd)

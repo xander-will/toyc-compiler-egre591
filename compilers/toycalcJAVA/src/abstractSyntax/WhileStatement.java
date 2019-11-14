@@ -7,7 +7,7 @@ public class WhileStatement implements Statement {
 
 	private Expression condition;
 	private Statement statement;
-	
+
 	public WhileStatement(Expression condition, Statement s) {
 		this.condition = condition;
 		this.statement = s;
@@ -24,4 +24,8 @@ public class WhileStatement implements Statement {
 		return s;
 	}
 
+	@Override
+	public String generateCode() {
+		return "";
+	}
 }

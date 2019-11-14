@@ -10,7 +10,7 @@ import abstractSyntax.PrettyPrint;
 public class ReadStatement implements Statement {
 
 	private List<Identifier> ids;
-	
+
 	public ReadStatement(ArrayList<Identifier> ids) {
 		this.ids = ids;
 	}
@@ -26,4 +26,8 @@ public class ReadStatement implements Statement {
 		return s;
 	}
 
+	@Override
+	public String generateCode() {
+		return "";
+	}
 }

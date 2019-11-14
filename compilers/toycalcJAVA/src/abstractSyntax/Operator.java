@@ -1,13 +1,14 @@
 package abstractSyntax;
 
+import codeGen.JVM.JVMCodeTemplate;
 import globals.TCglobals;
 
 public class Operator {
 
-	private String operator;
-	
+    private String operator;
+
     public Operator(String op) {
-    	this.operator = op;
+        this.operator = op;
     }
 
     public String generateCode() {
