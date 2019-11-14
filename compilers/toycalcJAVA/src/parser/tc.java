@@ -23,6 +23,7 @@ import compilers.CodeGenerationException;
 
 import globals.TCglobals;
 import output.TCoutput;
+import symTable.TCsymTable;
 import codeGen.JVM.JVMCodeTemplate;
 //import codegen.JVM.JVMcodeGenerator;
 //import codegen.JVM.JVMtargetCode;
@@ -38,6 +39,7 @@ public class tc {
             TCglobals.ast = parser.parse();
 
             TCglobals.codetemplate = new JVMCodeTemplate();
+            TCglobals.symtable = new TCsymTable();
             String finished_code = TCglobals.ast.generateCode();
 
             if (TCglobals.astDump || TCglobals.verbose) {

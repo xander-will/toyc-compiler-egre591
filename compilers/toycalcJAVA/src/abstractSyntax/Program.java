@@ -22,7 +22,7 @@ public class Program implements AbstractSyntax {
 
 	public String generateCode() {
 		CodeTemplate ct = TCglobals.codetemplate;
-		String s = ct.init();
+		String s = ct.init() + "\n";
 
 		for (Definition def : dl) {
 			if (def instanceof FunctionDefinition) {

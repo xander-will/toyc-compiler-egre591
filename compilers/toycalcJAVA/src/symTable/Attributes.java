@@ -37,8 +37,8 @@ public class Attributes implements AttributesInterface {
         this.st = st_map.get(st);
         this.dt = dt_map.get(dt);
         this.id = id;
-
-        if (this.st == SemanticType.FUNCTION) {
+        
+        if (dt == "function") {
             this.symbolTable = new TCsymTable();
         }
     }

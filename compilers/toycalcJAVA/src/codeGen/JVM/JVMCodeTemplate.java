@@ -33,7 +33,7 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     private String functionWrapper(String name, String args, String body) {
-        String s = ".method public static" + name + "(" + args + ")V\n";
+        String s = ".method public static " + name + "(" + args + ")V\n";
         s += body;
         s += ".end method\n";
         return s;

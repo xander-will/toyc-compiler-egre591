@@ -6,6 +6,8 @@ public interface CodeTemplate {
 
     public String init();
 
+    public String function(String name, String args, String body);
+
     public String loadVar(Integer id);
 
     public String number(String num);
@@ -14,5 +16,5 @@ public interface CodeTemplate {
 
     public String returnString();
 
-    public String storeVar(int id);
+    public String storeVar(Integer id);
 }
