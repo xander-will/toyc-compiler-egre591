@@ -11,9 +11,11 @@
 package parser;
 
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 import compilers.Parser;
 import compilers.Lexer;
@@ -42,18 +44,30 @@ public class tc {
             TCglobals.symtable = new TCsymTable();
             String finished_code = TCglobals.ast.generateCode();
 
-            
-            if (TCglobals.astDump || TCglobals.verbose) {
-                TCoutput.dumpAST(TCglobals.ast);
-            }
             if (TCglobals.verbose) {
-                System.err.println(TCglobals.symtable.toString());
-                System.err.println(finished_code);
+                TCoutput.dumpAST(TCglobals.ast);
+                TCoutput.dumpST(TCglobals.symtable);
+                System.out.println(finished_code);
+            } else {
+                if (TCglobals.astDump) {
+                    TCoutput.dumpAST(TCglobals.ast);
+                }
+                if (TCglobals.symDump) {
+                    TCoutput.dumpST(TCglobals.symtable);
+                }
+                if (TCglobals.codeDump) {
+                    System.out.println(finished_code);
+                }
             }
-
-            // if (TCglobals.symDump) {
-            // TCoutput.dumpST()
-            // }
+            if (TCglobals.targetFileName != null) {
+                try {
+                    FileWriter fw = new FileWriter(new File(TCglobals.targetFileName));
+                    fw.append(finished_code);
+                    fw.close();
+                } catch (Exception ex) {
+                    System.out.println("An error occured with the given filename.");
+                }
+            }
 
             /*
              * CodeGenerator gen = new JVMcodeGenerator(); TCglobals.objectcode =
@@ -87,21 +101,18 @@ public class tc {
             default:
                 List<String> argsList = Arrays.asList(args);
                 TCglobals.inputFileName = argsList.get(argsList.size() - 1);
-                if (argsList.contains("-help")) {
-                    printHelpMessage();
+                if (argsList.contains("-abstract")) {
+                    TCglobals.astDump = true;
                 }
-                // if (argsList.contains("-output")) {
-                // int index = argsList.indexOf("-output");
-                // if (argsList.size >= index + 1) {
-                // TCglobals.targetFileName = argsList.getItem(index + 2);
-                // }
-                // }
-                // if (argsList.contains("-class")) {
-                // int index = argsList.indexOf("-class");
-                // if (argsList.size >= index + 1) {
-                // TCglobals.outputClassFileName = argsList.getItem(index + 2);
-                // }
-                // }
+                if (argsList.contains("-class")) {
+                    int index = argsList.indexOf("-class");
+                    if (argsList.size() >= index + 1) {
+                        TCglobals.outputClassFileName = argsList.get(index + 1);
+                    }
+                }
+                if (argsList.contains("-code")) {
+                    TCglobals.codeDump = true;
+                }
                 if (argsList.contains("-debug")) {
                     int index = argsList.indexOf("-debug");
                     if (argsList.size() >= index + 1) {
@@ -109,12 +120,23 @@ public class tc {
                         TCglobals.debug = Byte.parseByte(debug);
                     }
                 }
-                if (argsList.contains("-abstract")) {
-                    TCglobals.astDump = true;
+                if (argsList.contains("-help")) {
+                    printHelpMessage();
+                }
+                if (argsList.contains("-output")) {
+                    int index = argsList.indexOf("-output");
+                    if (argsList.size() >= index + 1) {
+                        TCglobals.targetFileName = argsList.get(index + 1) + "." + TCglobals.ASM_FILE_EXTENSION;
+                    }
+                }
+                if (!argsList.contains("-output")) {
+                    TCglobals.outputClassFileName = getProgramName(TCglobals.inputFileName);
+                    TCglobals.targetFileName = TCglobals.outputClassFileName + "." + TCglobals.ASM_FILE_EXTENSION;
                 }
                 if (argsList.contains("-symbol")) {
                     TCglobals.symDump = true;
                 }
+
                 if (argsList.contains("-verbose") || argsList.contains("-v")) {
                     TCglobals.verbose = true;
                 }
@@ -122,25 +144,26 @@ public class tc {
                     System.out.println(TCglobals.VERSION);
                 }
             }
-            TCglobals.outputClassFileName = getProgramName(TCglobals.inputFileName);
-            TCglobals.targetFileName = TCglobals.outputClassFileName + "." + TCglobals.ASM_FILE_EXTENSION;
+
         } catch (Exception e) {
             System.err.println("toycalc compiler command line problem!");
         }
     }
 
     private static void printHelpMessage() {
+
+        // put this in TC output
         System.out.println("options:");
-        System.out.println("\t-help:                display a usage message");
-        System.out.println("\t-debug <level>        display messages that aid in tracing the compilation process");
-        System.out.println("\tLeveL:");
-        System.out.println("\t\t0 - All messages");
-        System.out.println("\t\t1 - Scanner messages only");
-        System.out.println("\t\t2 - Parser messages only");
-        System.out.println("\t-abstract             dump the abstract symbol tree");
-        System.out.println("\t-symbol               dump the symbol table(s)");
-        System.out.println("\t-verbose or -v        display all information");
-        System.out.println("\t-version              display the program version");
+        System.out.println("\t-help:                  display a usage message");
+        System.out.println("\t-debug <level>          display messages that aid in tracing the compilation process");
+        System.out.println("\t\tLeveL:");
+        System.out.println("\t\t\t\t0 - All messages");
+        System.out.println("\t\t\t\t1 - Scanner messages only");
+        System.out.println("\t\t\t\t2 - Parser messages only");
+        System.out.println("\t-abstract               dump the abstract symbol tree");
+        System.out.println("\t-symbol                 dump the symbol table(s)");
+        System.out.println("\t-verbose or -v          display all information");
+        System.out.println("\t-version                display the program version\n");
     }
 
     private static String getProgramName(String s) {

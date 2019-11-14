@@ -25,6 +25,7 @@ public class TCglobals {
     public static boolean verbose = false;
     public static boolean astDump = false;
     public static boolean symDump = false;
+    public static boolean codeDump = false;
 
     public static byte debug = 127;
 
