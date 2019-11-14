@@ -1,11 +1,16 @@
 package abstractSyntax;
 
 import compilers.AbstractSyntax;
+import compilers.CodeTemplate;
 
 import java.util.List;
 
 import abstractSyntax.Definition;
+import abstractSyntax.FunctionDefinition;
+import abstractSyntax.VariableDefinition;
 import abstractSyntax.PrettyPrint;
+
+import globals.TCglobals;
 
 public class Program implements AbstractSyntax {
 
@@ -14,6 +19,19 @@ public class Program implements AbstractSyntax {
     public Program(List<Definition> l) {
         dl = l;
     }
+
+	public String generateCode() {
+		CodeTemplate ct = TCglobals.codetemplate;
+		String s = ct.init();
+
+		for (Definition def : dl) {
+			if (def instanceof FunctionDefinition) {
+				TCglobals.symtable.add(def.getName(), "function");
+				TCglobals.localsymtable = TCglobals.symtable.get(def.getName()).getSymtable();
+				s += def.generateCode();
+			}
+		}
+	}
 
     public String toString() {
 		if (dl.isEmpty())

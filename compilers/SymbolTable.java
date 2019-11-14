@@ -1,6 +1,8 @@
 package compilers;
 
+import compilers.AttributesInterface;
+
 public interface SymbolTable {
-    public Symbol add(String id);
-    public Symbol find(String id);
+    public void add(String name, String type);
+    public AttributesInterface get(String id);
 }

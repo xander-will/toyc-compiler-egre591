@@ -1,19 +1,23 @@
 package symTable;
 
+import compilers.SymbolTable;
+
 import symTable.Attributes;
 
 import java.util.HashMap;
 
-public class TCsymTable {
+public class TCsymTable implements SymbolTable {
 
     private HashMap<String, Attributes> st;
+    private int next_entry_id;
 
     public TCsymTable() {
+        next_entry_id = 0;
         st = new HashMap<String, Attributes>();
     }
 
-    public void add(String id, Attributes attr) {
-        this.st.put(id, attr);
+    public void add(String name, String type) {
+        this.st.put(name, new Attributes(name, type, next_entry_id++));
     }
 
     public Attributes get(String id) {
@@ -24,10 +28,7 @@ public class TCsymTable {
     }
 
     public boolean containsId(String id) {
-        if (this.st.containsKey(id))
-            return true;
-        else
-            return false;
+        return this.st.containsKey(id);
     }
 
     public void print() {

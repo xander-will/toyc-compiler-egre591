@@ -23,6 +23,7 @@ import compilers.CodeGenerationException;
 
 import globals.TCglobals;
 import output.TCoutput;
+import codeGen.JVM.JVMCodeTemplate;
 //import codegen.JVM.JVMcodeGenerator;
 //import codegen.JVM.JVMtargetCode;
 
@@ -35,6 +36,8 @@ public class tc {
             Lexer scanner = new TCscanner(TCglobals.inputFileName);
             Parser parser = new TCparser(scanner);
             TCglobals.ast = parser.parse();
+
+            TCglobals.codetemplate = new JVMCodeTemplate();
 
             if (TCglobals.astDump) {
                 TCoutput.dumpAST(TCglobals.ast);

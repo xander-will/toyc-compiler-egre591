@@ -3,6 +3,7 @@ package globals;
 import compilers.AbstractSyntax;
 import compilers.SymbolTable;
 import compilers.TargetCode;
+import compilers.CodeTemplate;
 
 public class TCglobals {
 
@@ -13,6 +14,8 @@ public class TCglobals {
 
     public static AbstractSyntax ast = null;
     public static SymbolTable symtable = null;
+    public static SymbolTable localsymtable = null;
+    public static CodeTemplate codetemplate = null;
     public static TargetCode objectcode = null;
 
     public final static String COMPILER = "toycalc";
