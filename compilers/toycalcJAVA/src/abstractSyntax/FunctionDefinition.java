@@ -25,6 +25,10 @@ public class FunctionDefinition extends Definition {
 		return id.getName();
 	}
 
+	public String getType() {
+		return ty.getType();
+	}
+
 	public String generateCode() {
 		String name = id.getName();
 		String args = "[Ljava/lang/String;";

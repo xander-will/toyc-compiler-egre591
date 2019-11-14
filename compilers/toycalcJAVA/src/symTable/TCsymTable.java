@@ -16,8 +16,8 @@ public class TCsymTable implements SymbolTable {
         st = new HashMap<String, Attributes>();
     }
 
-    public void add(String name, String type) {
-        this.st.put(name, new Attributes(name, type, next_entry_id++));
+    public void add(String name, String data_type, String sem_type) {
+        this.st.put(name, new Attributes(data_type, sem_type, next_entry_id++));
     }
 
     public Attributes get(String id) {

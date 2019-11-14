@@ -8,6 +8,10 @@ public class Type {
 		this.type = ty;
 	}
 
+	public String getType() {
+		return type;
+	}
+
 	public String toString() {
 		return "type(" + type + ")\n";
 	}

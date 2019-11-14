@@ -22,10 +22,8 @@ public class Expr implements Expression {
 
 	public String generateAssign() {
 		String s = right.generateCode();
-		System.err.println("expr: " + s);
 		if (left instanceof Identifier) {
 			s += ((Identifier) left).generateStore();
-			System.err.println("expr: " + s);
 		} else {
 			TCoutput.reportSEMANTIC_ERROR("",
 					"Only variables may be assigned to, (" + left.toString() + "is an expression)");
@@ -38,11 +36,8 @@ public class Expr implements Expression {
 			return generateAssign();
 		}
 		String s = left.generateCode();
-		System.err.println("expr: " + s);
 		s += right.generateCode();
-		System.err.println("expr: " + s);
 		s += operator.generateCode();
-		System.err.println("expr: " + s);
 		return s;
 	}
 

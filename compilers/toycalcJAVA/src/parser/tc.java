@@ -42,10 +42,12 @@ public class tc {
             TCglobals.symtable = new TCsymTable();
             String finished_code = TCglobals.ast.generateCode();
 
+            
             if (TCglobals.astDump || TCglobals.verbose) {
                 TCoutput.dumpAST(TCglobals.ast);
             }
             if (TCglobals.verbose) {
+                System.err.println(TCglobals.symtable.toString());
                 System.err.println(finished_code);
             }
 

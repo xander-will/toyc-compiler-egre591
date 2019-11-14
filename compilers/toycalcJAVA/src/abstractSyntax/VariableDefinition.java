@@ -17,6 +17,10 @@ public class VariableDefinition extends Definition {
 		return id.getName();
 	}
 
+	public String getType() {
+		return type.getType();
+	}
+
 	public String toString() {
 		String s = "varDef(\n";
 		PrettyPrint.indent();

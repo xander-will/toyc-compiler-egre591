@@ -18,7 +18,7 @@ public class CompoundStatement implements Statement {
 
 	public String generateCode() {
 		for (VariableDefinition vd : definitionList) {
-			TCglobals.localsymtable.add(vd.getName(), "variable");
+			TCglobals.localsymtable.add(vd.getName(), vd.getType(), "variable");
 		}
 		String s = "";
 		for (Statement st : statementList) {

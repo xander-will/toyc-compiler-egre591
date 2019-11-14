@@ -30,15 +30,15 @@ public class Attributes implements AttributesInterface {
 
     private SemanticType st;
     private DataType dt;
-    private int id;
+    private Integer id;
     private TCsymTable symbolTable = null;
 
-    public Attributes(String st, String dt, int id) {
+    public Attributes(String dt, String st, int id) {
         this.st = st_map.get(st);
         this.dt = dt_map.get(dt);
         this.id = id;
-        
-        if (dt == "function") {
+
+        if (st == "function") {
             this.symbolTable = new TCsymTable();
         }
     }
@@ -62,9 +62,12 @@ public class Attributes implements AttributesInterface {
 
     public String toString() {
         if (this.st != SemanticType.FUNCTION) {
-            return "(" + this.st.toString() + ", " + this.dt.toString() + ")";
+            return "(" + id.toString() + ", " + this.st.toString() + ", " + this.dt.toString() + ")";
         } else {
-            return "(" + this.st.toString() + ", " + this.dt.toString() + ")\n" + this.symbolTable.toString();
+            String s = "(" + this.st.toString() + ", " + this.dt.toString() + ")\n";
+            for (String i : this.symbolTable.toString().split("\\R"))
+                s += "\t" + i + "\n";
+            return s;
         }
     }
 }
