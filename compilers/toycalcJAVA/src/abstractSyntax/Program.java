@@ -28,9 +28,11 @@ public class Program implements AbstractSyntax {
 			if (def instanceof FunctionDefinition) {
 				TCglobals.symtable.add(def.getName(), "function");
 				TCglobals.localsymtable = TCglobals.symtable.get(def.getName()).getSymtable();
-				s += def.generateCode();
+				s += def.generateCode() + "\n";
 			}
 		}
+
+		return s;
 	}
 
     public String toString() {

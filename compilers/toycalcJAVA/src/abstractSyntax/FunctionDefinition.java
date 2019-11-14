@@ -5,6 +5,8 @@ import java.util.List;
 import abstractSyntax.Definition;
 import abstractSyntax.PrettyPrint;
 
+import globals.TCglobals;
+
 public class FunctionDefinition extends Definition {
 
 	Type ty;
@@ -17,6 +19,18 @@ public class FunctionDefinition extends Definition {
 		this.id = id;
 		this.fd = fd;
 		this.st = s;
+	}
+
+	public String getName() {
+		return id.getName();
+	}
+
+	public String generateCode() {
+		String name = id.getName();
+		String args = "[Ljava/lang/String;"
+		String body = st.generateCode();
+
+		return TCglobals.codetemplate.function(name, args, body);
 	}
 
 	public String toString() {

@@ -1,5 +1,7 @@
 package codeGen.JVM;
 
+import java.util.HashMap;
+
 import compilers.CodeTemplate;
 
 import globals.TCglobals;
@@ -16,13 +18,12 @@ public class JVMCodeTemplate implements CodeTemplate {
         String s = directive("source", TCglobals.inputFileName);
         s += directive("class", "public " + TCglobals.outputClassFileName);
         s += directive("super", "java/lang/Object") + "\n";
-        
-        String body = functionHeader(1, 1);
-        body += "\taload_0\n";
-        body += "\tinvokespecial java/land/Object/<init>()V\n";
-        body += "\treturn\n";
-
-        s += functionWrapper("public <init>", "", body) + "\n";
+        s += ".method public <init>()V\n";
+        s += functionHeader(1, 1);
+        s += "\taload_0\n";
+        s += "\tinvokespecial java/land/Object/<init>()V\n";
+        s += "\treturn\n";
+        s += ".end method\n";
         return s;
     }
 
@@ -32,7 +33,7 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     private String functionWrapper(String name, String args, String body) {
-        String s = ".method " + name + "(" + args + ")V\n";
+        String s = ".method public static" + name + "(" + args + ")V\n";
         s += body;
         s += ".end method\n";
         return s;
@@ -49,6 +50,31 @@ public class JVMCodeTemplate implements CodeTemplate {
             return "\tiload_" + id.toString() + "\n";
         else
             return "iload " + id.toString() + "\n";
+    }
+
+    public String number(String num) {
+        Integer x = Integer.parseInt(num);
+        if (0 <= x && x <= 5)
+            return "\ticonst_" + num + "\n";
+        else
+            return "bipush " + num + "\n";
+    }
+
+    private static HashMap<String, String> op_table;
+    static {
+        op_table = new HashMap<>();
+        op_table.put("+", "iadd");
+        op_table.put("-", "isub");
+        op_table.put("*", "imul");
+        op_table.put("/", "idiv");
+    }
+
+    public String operation(String op) {
+        return "\t" + op_table.get(op) + "\n";
+    }
+
+    public String return() {
+        return "\treturn\n";
     }
 
     public String storeVar(Integer id) {

@@ -38,9 +38,13 @@ public class tc {
             TCglobals.ast = parser.parse();
 
             TCglobals.codetemplate = new JVMCodeTemplate();
+            String finished_code = TCglobals.ast.generateCode();
 
-            if (TCglobals.astDump) {
+            if (TCglobals.astDump || TCglobals.verbose) {
                 TCoutput.dumpAST(TCglobals.ast);
+            }
+            if (TCglobals.verbose) {
+                System.err.println(finished_code);
             }
 
             // if (TCglobals.symDump) {

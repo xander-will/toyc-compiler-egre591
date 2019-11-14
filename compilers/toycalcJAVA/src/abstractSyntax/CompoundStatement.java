@@ -15,6 +15,18 @@ public class CompoundStatement implements Statement {
 		this.statementList = sl;
 	}
 
+	public String generateCode() {
+		for (VariableDefinition vd : definitionList) {
+			TCglobals.localsymtable.add(vd.getName(), "variable");
+		}
+		String s = "";
+		for (Statement st : statementList) {
+			s += st.generateCode();
+		}
+
+		return s;
+	}
+
 	public String toString() {
 		if (definitionList.isEmpty() && statementList.isEmpty())
 			return "blockStatement()\n";

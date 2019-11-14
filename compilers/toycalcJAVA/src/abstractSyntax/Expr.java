@@ -1,7 +1,12 @@
 package abstractSyntax;
 
+import output.TCoutput;
+
 import abstractSyntax.Expression;
+import abstractSyntax.Identifier
 import abstractSyntax.PrettyPrint;
+
+import globals.TCglobals;
 
 public class Expr implements Expression {
 
@@ -13,6 +18,27 @@ public class Expr implements Expression {
 		this.operator = op;
 		this.left = left;
 		this.right = right;
+	}
+
+	public String generateAssign() {
+		String s = right.generateCode();
+		if (left instanceof Identifier) {
+			s += ((Identifier)left).generateStore();
+		}
+		else {
+			TCoutput.reportSEMANTIC_ERROR("", "Only variables may be assigned to, (", left.toString(), "is an expression)");
+		}
+		return s;
+	}
+
+	public String generateCode() {
+		if (operator.toString().equals("operator(=)\n")) {
+			return generateAssign();	
+		}
+		String s = left.generateCode();
+		s += right.generateCode();
+		s += operator.generateCode();
+		return s;
 	}
 
 	public String toString() {

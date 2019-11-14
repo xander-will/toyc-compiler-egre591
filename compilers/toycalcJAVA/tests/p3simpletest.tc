@@ -2,4 +2,6 @@ int main() {
 	int x;
 	x = 2;
 	x = x + 4;
+	
+	return 0;
 }

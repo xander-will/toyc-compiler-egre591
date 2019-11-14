@@ -13,6 +13,10 @@ public class VariableDefinition extends Definition {
 		this.id = id;
 	}
 
+	public String getName() {
+		return id.getName();
+	}
+
 	public String toString() {
 		String s = "varDef(\n";
 		PrettyPrint.indent();

@@ -40,6 +40,14 @@ public class Identifier implements Expression {
         return TCglobals.codetemplate.storeVar(id);
     }
 
+    public String generateCode() {
+        return generateLoad();
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public String toString() {
         return "id(" + name + ")\n";
     }
