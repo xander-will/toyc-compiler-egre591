@@ -22,7 +22,7 @@ public class Identifier implements Expression {
         }
         if (id == -1) {
             try {
-                id = TCglobals.localsymtable.get(name).getID();
+                id = TCglobals.symtable.get(name).getID();
             }
             catch(Exception e) {
                 TCoutput.reportSEMANTIC_ERROR("", "Call on variable " + name " that was not initialized.");
