@@ -10,6 +10,13 @@ public class JVMCodeTemplate implements CodeTemplate {
 
     // please keep in alphabetical order
 
+    public String assignment(String lval, String rval) {
+        String s = rval;
+        s += "\tdup\n";
+        s += lval;
+        return s;
+    }
+
     public String directive(String dir, String arg) {
         return "." + dir + " " + arg + "\n";
     }

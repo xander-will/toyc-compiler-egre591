@@ -8,41 +8,32 @@ import abstractSyntax.PrettyPrint;
 
 import globals.TCglobals;
 
-public class Expr implements Expression {
+public class AssignExpression implements Expression {
 
 	private Operator operator;
 	private Expression left;
 	private Expression right;
 
-	public Expr(Operator op, Expression left, Expression right) {
+	public AssignExpression(Operator op, Expression left, Expression right) {
 		this.operator = op;
 		this.left = left;
 		this.right = right;
 	}
 
-	public String generateAssign() {
-		String s = right.generateCode();
+	public String generateCode() {
+		String rval = right.generateCode();
+        String lval = null;
 		if (left instanceof Identifier) {
-			s += ((Identifier) left).generateStore();
+			lval = ((Identifier) left).generateStore();
 		} else {
 			TCoutput.reportSEMANTIC_ERROR("",
 					"Only variables may be assigned to, (" + left.toString() + "is an expression)");
 		}
-		return s;
-	}
-
-	public String generateCode() {
-		if (operator.toString().equals("operator(=)\n")) {
-			return generateAssign();
-		}
-		String s = left.generateCode();
-		s += right.generateCode();
-		s += operator.generateCode();
-		return s;
+		return TCglobals.codetemplate.assignment(lval, rval);
 	}
 
 	public String toString() {
-		String s = "expr(\n";
+		String s = "assign(\n";
 		PrettyPrint.indent();
 		s += PrettyPrint.spaces() + "left = " + left.toString();
 		s += PrettyPrint.spaces() + "op = " + operator.toString();

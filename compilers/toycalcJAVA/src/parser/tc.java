@@ -47,7 +47,7 @@ public class tc {
             if (TCglobals.verbose) {
                 TCoutput.dumpAST(TCglobals.ast);
                 TCoutput.dumpST(TCglobals.symtable);
-                System.out.println(finished_code);
+                System.err.println(finished_code);
             } else {
                 if (TCglobals.astDump) {
                     TCoutput.dumpAST(TCglobals.ast);
@@ -56,11 +56,12 @@ public class tc {
                     TCoutput.dumpST(TCglobals.symtable);
                 }
                 if (TCglobals.codeDump) {
-                    System.out.println(finished_code);
+                    System.err.println(finished_code);
                 }
             }
             if (TCglobals.targetFileName != null) {
                 try {
+                    System.err.println("Output name is " + TCglobals.targetFileName);
                     FileWriter fw = new FileWriter(new File(TCglobals.targetFileName));
                     fw.append(finished_code);
                     fw.close();
@@ -169,7 +170,7 @@ public class tc {
     private static String getProgramName(String s) {
         String[] strs = s.split("\\.");
         strs = strs[0].split("\\/");
-        return strs[0];
+        return strs[1];
     }
 
     private static void printUsageMessage() {

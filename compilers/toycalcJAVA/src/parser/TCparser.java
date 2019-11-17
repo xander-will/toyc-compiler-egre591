@@ -63,6 +63,9 @@ public class TCparser implements Parser {
 	Boolean verbose;
 	byte debugLevel;
 
+	boolean read_flag;
+	boolean write_flag;
+
 	public TCparser(Lexer s) {
 		scanner = s;
 		verbose = TCglobals.verbose;
@@ -85,6 +88,11 @@ public class TCparser implements Parser {
 	private Boolean isTypeToken(Token t) {
 		TCtoken.Tokens tok = (Tokens) t.getTokenType();
 		return tok.equals(TCtoken.Tokens.INT) || tok.equals(TCtoken.Tokens.CHAR);
+	}
+
+	private void resetFlags() {
+		this.read_flag = false;
+		this.write_flag = false;
 	}
 
 	private void enteringDEBUG(String string) {
@@ -110,6 +118,7 @@ public class TCparser implements Parser {
 		List<Definition> definitionList = new ArrayList<Definition>();
 		while (isTypeToken(buff)) {
 			definitionList.add(definition());
+			resetFlags();
 		}
 		accept(TCtoken.Tokens.EOF);
 		exitingDEBUG("program");
@@ -124,7 +133,7 @@ public class TCparser implements Parser {
 			List<VariableDefinition> fd = functionHeader();
 			Statement s = compoundStatement();
 			exitingDEBUG("definition");
-			return new FunctionDefinition(ty, id, fd, s);
+			return new FunctionDefinition(ty, id, fd, s, read_flag, write_flag);
 		} else {
 			accept(TCtoken.Tokens.SEMICOLON);
 			exitingDEBUG("definition");
@@ -360,10 +369,7 @@ public class TCparser implements Parser {
 		return new ExpressionStatement(expr);
 	}
 
-	/*
-	 * THIS SHOULD BE THE MODEL FOR ALL OF THE OTHER RECURSIVE EXPRESSION METHODS
-	 * please follow this template exactly
-	 */
+
 	private Expression expression() {
 		enteringDEBUG("expression");
 		Expression left = relopExpression();
@@ -371,7 +377,7 @@ public class TCparser implements Parser {
 			Operator op = operator(TCtoken.Tokens.ASSIGNOP);
 			Expression right = expression();
 			exitingDEBUG("expression");
-			return new Expr(op, left, right);
+			return new AssignExpression(op, left, right);
 		} else {
 			exitingDEBUG("expression");
 			return left;
@@ -382,10 +388,15 @@ public class TCparser implements Parser {
 		enteringDEBUG("relopExpression");
 		Expression left = simpleExpression();
 		if (buff.getTokenType().equals(TCtoken.Tokens.RELOP)) {
-			Operator op = operator(TCtoken.Tokens.RELOP);
-			Expression right = relopExpression();
+			List<Operator> op = new ArrayList<>();
+			List<Expression> expr = new ArrayList<>();
+			expr.add(left);
+			while (buff.getTokenType().equals(TCtoken.Tokens.RELOP)) {
+				op.add(operator(TCtoken.Tokens.RELOP));
+				expr.add(simpleExpression());
+			}
 			exitingDEBUG("relopExpression");
-			return new Expr(op, left, right);
+			return new SimpleExpression(op, expr);
 		} else {
 			exitingDEBUG("relopExpression");
 			return left;
@@ -396,10 +407,15 @@ public class TCparser implements Parser {
 		Expression left = term();
 		enteringDEBUG("simpleExpression");
 		if (buff.getTokenType().equals(TCtoken.Tokens.ADDOP)) {
-			Operator op = operator(TCtoken.Tokens.ADDOP);
-			Expression right = simpleExpression();
+			List<Operator> op = new ArrayList<>();
+			List<Expression> expr = new ArrayList<>();
+			expr.add(left)
+			while (buff.getTokenType().equals(TCtoken.Tokens.ADDOP)) {
+				op.add(operator(TCtoken.Tokens.ADDOP));
+				expr.add(term());
+			}
 			exitingDEBUG("simpleExpression");
-			return new Expr(op, left, right);
+			return new SimpleExpression(op, expr);
 		} else {
 			exitingDEBUG("simpleExpression");
 			return left;
@@ -410,10 +426,15 @@ public class TCparser implements Parser {
 		enteringDEBUG("term");
 		Expression left = primary();
 		if (buff.getTokenType().equals(TCtoken.Tokens.MULOP)) {
-			Operator op = operator(TCtoken.Tokens.MULOP);
-			Expression right = term();
+			List<Operator> op = new ArrayList<>();
+			List<Expression> expr = new ArrayList<>();
+			expr.add(left)
+			while (buff.getTokenType().equals(TCtoken.Tokens.MULOP)) {
+				op.add(operator(TCtoken.Tokens.MULOP));
+				expr.add(term());
+			}
 			exitingDEBUG("term");
-			return new Expr(op, left, right);
+			return new SimpleExpression(op, expr);
 		} else {
 			exitingDEBUG("term");
 			return left;

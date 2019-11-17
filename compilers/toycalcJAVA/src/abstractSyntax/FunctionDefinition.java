@@ -13,12 +13,16 @@ public class FunctionDefinition extends Definition {
 	Identifier id;
 	List<VariableDefinition> fd;
 	Statement st;
+	boolean read;
+	boolean write;
 
-	public FunctionDefinition(Type ty, Identifier id, List<VariableDefinition> fd, Statement s) {
+	public FunctionDefinition(Type ty, Identifier id, List<VariableDefinition> fd, Statement s, boolean read, boolean write) {
 		this.ty = ty;
 		this.id = id;
 		this.fd = fd;
 		this.st = s;
+		this.read = read;
+		this.write = write;
 	}
 
 	public String getName() {
@@ -31,7 +35,7 @@ public class FunctionDefinition extends Definition {
 
 	public String generateCode() {
 		String name = id.getName();
-		String args = "[Ljava/lang/String;";
+		String args = "[Ljava/lang/String;";	// hardcoded for main, needs to be changed
 		String body = st.generateCode();
 
 		return TCglobals.codetemplate.function(name, args, body);
