@@ -14,7 +14,6 @@ public class StringLiteral implements Expression {
         return "stringLit(" + stringBody + ")\n";
     }
 
-    @Override
     public String generateCode() {
         return "";
     }

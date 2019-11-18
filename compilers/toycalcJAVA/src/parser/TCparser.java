@@ -369,7 +369,6 @@ public class TCparser implements Parser {
 		return new ExpressionStatement(expr);
 	}
 
-
 	private Expression expression() {
 		enteringDEBUG("expression");
 		Expression left = relopExpression();
@@ -409,7 +408,7 @@ public class TCparser implements Parser {
 		if (buff.getTokenType().equals(TCtoken.Tokens.ADDOP)) {
 			List<Operator> op = new ArrayList<>();
 			List<Expression> expr = new ArrayList<>();
-			expr.add(left)
+			expr.add(left);
 			while (buff.getTokenType().equals(TCtoken.Tokens.ADDOP)) {
 				op.add(operator(TCtoken.Tokens.ADDOP));
 				expr.add(term());
@@ -428,7 +427,7 @@ public class TCparser implements Parser {
 		if (buff.getTokenType().equals(TCtoken.Tokens.MULOP)) {
 			List<Operator> op = new ArrayList<>();
 			List<Expression> expr = new ArrayList<>();
-			expr.add(left)
+			expr.add(left);
 			while (buff.getTokenType().equals(TCtoken.Tokens.MULOP)) {
 				op.add(operator(TCtoken.Tokens.MULOP));
 				expr.add(term());

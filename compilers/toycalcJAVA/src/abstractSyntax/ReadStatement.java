@@ -26,7 +26,6 @@ public class ReadStatement implements Statement {
 		return s;
 	}
 
-	@Override
 	public String generateCode() {
 		return "";
 	}

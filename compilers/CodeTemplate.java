@@ -2,11 +2,13 @@ package compilers;
 
 public interface CodeTemplate {
 
+    public String assignment(String lval, String rval);
+
     public String directive(String dir, String arg);
 
-    public String init();
-
     public String function(String name, String args, String body);
+
+    public String init();
 
     public String loadVar(Integer id);
 

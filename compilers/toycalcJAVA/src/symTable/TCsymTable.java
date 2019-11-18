@@ -41,14 +41,4 @@ public class TCsymTable implements SymbolTable {
 
         return string;
     }
-
-    // public class Symbol {
-    // private String id;
-    // private Attributes attributes;
-
-    // public Symbol(String id, Attributes attributes) {
-    // this.id = id;
-    // this.attributes = attributes;
-    // }
-    // }
 }

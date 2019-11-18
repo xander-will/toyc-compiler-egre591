@@ -24,7 +24,6 @@ public class WriteStatement implements Statement {
 		return s;
 	}
 
-	@Override
 	public String generateCode() {
 		return "";
 	}

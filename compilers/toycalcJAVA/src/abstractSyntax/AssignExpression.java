@@ -22,13 +22,14 @@ public class AssignExpression implements Expression {
 
 	public String generateCode() {
 		String rval = right.generateCode();
-        String lval = null;
+		String lval = null;
 		if (left instanceof Identifier) {
 			lval = ((Identifier) left).generateStore();
 		} else {
 			TCoutput.reportSEMANTIC_ERROR("",
 					"Only variables may be assigned to, (" + left.toString() + "is an expression)");
 		}
+
 		return TCglobals.codetemplate.assignment(lval, rval);
 	}
 

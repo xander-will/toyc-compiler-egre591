@@ -34,7 +34,6 @@ public class IfStatement implements Statement {
 		return s;
 	}
 
-	@Override
 	public String generateCode() {
 		return "";
 	}

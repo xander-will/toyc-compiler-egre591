@@ -24,7 +24,6 @@ public class WhileStatement implements Statement {
 		return s;
 	}
 
-	@Override
 	public String generateCode() {
 		return "";
 	}

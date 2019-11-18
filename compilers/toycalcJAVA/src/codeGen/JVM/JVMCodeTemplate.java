@@ -21,19 +21,6 @@ public class JVMCodeTemplate implements CodeTemplate {
         return "." + dir + " " + arg + "\n";
     }
 
-    public String init() {
-        String s = directive("source", TCglobals.inputFileName);
-        s += directive("class", "public " + TCglobals.outputClassFileName);
-        s += directive("super", "java/lang/Object") + "\n";
-        s += ".method public <init>()V\n";
-        s += functionHeader(1, 1);
-        s += "\taload_0\n";
-        s += "\tinvokespecial java/land/Object/<init>()V\n";
-        s += "\treturn\n";
-        s += ".end method\n";
-        return s;
-    }
-
     public String function(String name, String args, String body) {
         String fh = functionHeader(10, 10); // hardcoded for convenience (toyCalcdoes this as well)
         return functionWrapper(name, args, fh + body);
@@ -52,6 +39,19 @@ public class JVMCodeTemplate implements CodeTemplate {
         return s;
     }
 
+    public String init() {
+        String s = directive("source", TCglobals.inputFileName);
+        s += directive("class", "public " + TCglobals.outputClassFileName);
+        s += directive("super", "java/lang/Object") + "\n";
+        s += ".method public <init>()V\n";
+        s += functionHeader(1, 1);
+        s += "\taload_0\n";
+        s += "\tinvokespecial java/land/Object/<init>()V\n";
+        s += "\treturn\n";
+        s += ".end method\n";
+        return s;
+    }
+
     public String loadVar(Integer id) {
         if (0 <= id && id <= 3)
             return "\tiload_" + id.toString() + "\n";
@@ -67,6 +67,10 @@ public class JVMCodeTemplate implements CodeTemplate {
             return "bipush " + num + "\n";
     }
 
+    public String operator(String op) {
+        return "\t" + op_table.get(op) + "\n";
+    }
+
     private static HashMap<String, String> op_table;
     static {
         op_table = new HashMap<>();
@@ -74,10 +78,6 @@ public class JVMCodeTemplate implements CodeTemplate {
         op_table.put("-", "isub");
         op_table.put("*", "imul");
         op_table.put("/", "idiv");
-    }
-
-    public String operator(String op) {
-        return "\t" + op_table.get(op) + "\n";
     }
 
     public String returnString() {

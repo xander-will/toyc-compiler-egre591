@@ -1,8 +1,10 @@
 int main() {
 	int x;
 	int y;
+	int z;
 
 	x = 2;
+	z = -x;
 	y = x = x + 4;
 	y = x * x;
 	x = 2 - y;

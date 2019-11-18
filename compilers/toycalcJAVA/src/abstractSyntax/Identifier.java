@@ -42,7 +42,6 @@ public class Identifier implements Expression {
         return TCglobals.codetemplate.storeVar(id);
     }
 
-    @Override
     public String generateCode() {
         return generateLoad();
     }

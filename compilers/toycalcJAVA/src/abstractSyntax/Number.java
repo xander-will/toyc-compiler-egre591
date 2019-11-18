@@ -12,7 +12,6 @@ public class Number implements Expression {
         this.number = num;
     }
 
-    @Override
     public String generateCode() {
         return TCglobals.codetemplate.number(this.number).toString();
     }

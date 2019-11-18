@@ -14,7 +14,7 @@ public class CharLiteral implements Expression {
         return "charLiteral(" + charLit + ")\n";
     }
 
-    @Override
+    // Code generation not needed
     public String generateCode() {
         return "";
     }

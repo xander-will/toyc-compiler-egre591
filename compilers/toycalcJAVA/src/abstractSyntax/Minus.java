@@ -14,7 +14,6 @@ public class Minus implements Expression {
         return "negative " + expression.toString();
     }
 
-    @Override
     public String generateCode() {
         return "";
     }
