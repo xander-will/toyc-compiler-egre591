@@ -16,7 +16,8 @@ public class FunctionDefinition extends Definition {
 	boolean read;
 	boolean write;
 
-	public FunctionDefinition(Type ty, Identifier id, List<VariableDefinition> fd, Statement s, boolean read, boolean write) {
+	public FunctionDefinition(Type ty, Identifier id, List<VariableDefinition> fd, Statement s, boolean read,
+			boolean write) {
 		this.ty = ty;
 		this.id = id;
 		this.fd = fd;
@@ -34,8 +35,12 @@ public class FunctionDefinition extends Definition {
 	}
 
 	public String generateCode() {
+		/*
+		 * Check for read/write boolean, if true call
+		 * codetemplate.addReader()/addWriter()
+		 */
 		String name = id.getName();
-		String args = "[Ljava/lang/String;";	// hardcoded for main, needs to be changed
+		String args = "[Ljava/lang/String;"; // hardcoded for main, needs to be changed
 		String body = st.generateCode();
 
 		return TCglobals.codetemplate.function(name, args, body);

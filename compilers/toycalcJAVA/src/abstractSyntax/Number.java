@@ -13,7 +13,7 @@ public class Number implements Expression {
     }
 
     public String generateCode() {
-        return TCglobals.codetemplate.number(this.number).toString();
+        return TCglobals.codetemplate.number(this.number);
     }
 
     public String toString() {

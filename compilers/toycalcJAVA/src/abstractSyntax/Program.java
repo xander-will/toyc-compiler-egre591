@@ -14,11 +14,17 @@ import globals.TCglobals;
 
 public class Program implements AbstractSyntax {
 
-    List<Definition> dl;
+	List<Definition> dl;
 
-    public Program(List<Definition> l) {
-        dl = l;
-    }
+	public Program(List<Definition> l) {
+		dl = l;
+	}
+
+	/*
+	 * Remember to add instanceof check for vardef and add generate code for vardef
+	 * Add args_len to the attribute class and set it up here
+	 * ((FunctionDefinitiondef).arglen())
+	 */
 
 	public String generateCode() {
 		CodeTemplate ct = TCglobals.codetemplate;
@@ -35,7 +41,7 @@ public class Program implements AbstractSyntax {
 		return s;
 	}
 
-    public String toString() {
+	public String toString() {
 		if (dl.isEmpty())
 			return "prog()";
 		String s = "prog(\n";
@@ -46,6 +52,6 @@ public class Program implements AbstractSyntax {
 		s += PrettyPrint.spaces() + ")\n";
 
 		return s;
-    }
+	}
 
 }

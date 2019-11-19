@@ -59,6 +59,34 @@ public class JVMCodeTemplate implements CodeTemplate {
             return "iload " + id.toString() + "\n";
     }
 
+    public String relopLogic(String op) {
+        String s = "";
+        switch (op) {
+        case "GTE":
+            s = "invokestatic " + globals.TCglobals.outputClassFileName + "." + logic_ops.get("LT");
+            s += "invokestatic " + globals.TCglobals.outputClassFileName + "." + logic_ops.get("NOT");
+            return s;
+        case "LTE":
+            s = "invokestatic " + globals.TCglobals.outputClassFileName + "." + logic_ops.get("GT");
+            s += "invokestatic " + globals.TCglobals.outputClassFileName + "." + logic_ops.get("NOT");
+            return s;
+        default:
+            return "invokestatic " + globals.TCglobals.outputClassFileName + "." + logic_ops.get(op);
+        }
+
+    }
+
+    private static HashMap<String, String> logic_ops;
+    static {
+        logic_ops = new HashMap<String, String>();
+        logic_ops.put("AND", "toyCAnd(II)I");
+        logic_ops.put("NOT", "toyCNot(I)I");
+        logic_ops.put("OR", "toyCOr(II)I");
+        logic_ops.put("EQ", "toyCEquals(II)I");
+        logic_ops.put("GT", "toyCGreaterThan(II)I");
+        logic_ops.put("LT", "toyCLessThan(II)I");
+    }
+
     public String number(String num) {
         Integer x = Integer.parseInt(num);
         if (0 <= x && x <= 5)
