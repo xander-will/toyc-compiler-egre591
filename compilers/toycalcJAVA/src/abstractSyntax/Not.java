@@ -1,6 +1,7 @@
 package abstractSyntax;
 
 import abstractSyntax.Expression;
+
 import globals.TCglobals;
 
 public class Not implements Expression {
@@ -16,7 +17,8 @@ public class Not implements Expression {
     }
 
     public String generateCode() {
-        return "";
+        String s = expression.generateCode();
+        return s + TCglobals.codetemplate.operator("!");
     }
 
 }

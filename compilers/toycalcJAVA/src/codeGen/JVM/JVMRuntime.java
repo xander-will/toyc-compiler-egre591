@@ -4,7 +4,9 @@ import java.util.HashMap;
 
 public class JVMRuntime {
 
-	private static final String runtimeFunctions =  ".method private static toyCAnd(II)I\n" + 
+	// bless you grant for doing this lol -x
+
+	public static final String runtimeFunctions =  ".method private static toyCAnd(II)I\n" + 
 		"\t.limit stack 2\n" + 
 		"\t.limit locals 2\n" + 
 		"\tiload_0 \n" + 
@@ -109,9 +111,5 @@ public class JVMRuntime {
 		"\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
 		"\treturn\n" +
 		".end method\n\n";
-		
-    public String getRuntimeFunctions() {
-		return runtimeFunctions;
-	}
 	
 }

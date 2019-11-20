@@ -32,21 +32,15 @@ public class Program implements AbstractSyntax {
 
 		for (Definition def : dl) {
 			if (def instanceof FunctionDefinition) {
-				TCglobals.symtable.add(def.getName(), def.getType(), "function");
+				TCglobals.symtable.add(def.getName(), def.getType(), "function", def.getArgNum());
 				TCglobals.localsymtable = TCglobals.symtable.get(def.getName()).getSymtable();
 				s += def.generateCode() + "\n";
 			}
+			else {
+				TCglobals.symtable.add(def.getName(), def.getType(), "variable");
+			}
 		}
-
-		s += "; ==============================================\n" +
-			 "; =========== Begin Runtime Functions ==========\n" +
-			 "; ==============================================\n\n";
-
-		s += TCglobals.codetemplate.getRuntimeFunctions();
-
-		s += "; ==============================================\n" +
-			 "; ============ End Runtime Functions ===========\n" +
-			 "; ==============================================\n\n";
+		s += TCglobals.codetemplate.runtime();
 
 		return s;
 	}

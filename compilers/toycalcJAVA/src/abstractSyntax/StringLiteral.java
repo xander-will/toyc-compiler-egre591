@@ -2,6 +2,9 @@ package abstractSyntax;
 
 import abstractSyntax.Expression;
 
+import globals.TCglobals;
+
+
 public class StringLiteral implements Expression {
 
     private String stringBody;
@@ -15,6 +18,6 @@ public class StringLiteral implements Expression {
     }
 
     public String generateCode() {
-        return "\tldc " + stringBody + "\n";
+        return TCglobals.codetemplate.stringLit(stringBody);
     }
 }

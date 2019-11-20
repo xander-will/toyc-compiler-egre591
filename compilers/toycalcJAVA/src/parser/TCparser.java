@@ -63,8 +63,7 @@ public class TCparser implements Parser {
 	Boolean verbose;
 	byte debugLevel;
 
-	boolean read_flag;
-	boolean write_flag;
+	int var_num = 0;
 
 	public TCparser(Lexer s) {
 		scanner = s;
@@ -89,12 +88,6 @@ public class TCparser implements Parser {
 		TCtoken.Tokens tok = (Tokens) t.getTokenType();
 		return tok.equals(TCtoken.Tokens.INT) || tok.equals(TCtoken.Tokens.CHAR);
 	}
-
-	private void resetFlags() {
-		this.read_flag = false;
-		this.write_flag = false;
-	}
-
 	private void enteringDEBUG(String string) {
 		if (verbose || debugLevel == 2 || debugLevel == 0)
 			System.err.println("[PARSER] ENTERING [" + string + "]");
@@ -118,7 +111,7 @@ public class TCparser implements Parser {
 		List<Definition> definitionList = new ArrayList<Definition>();
 		while (isTypeToken(buff)) {
 			definitionList.add(definition());
-			resetFlags();
+			var_num = 0;
 		}
 		accept(TCtoken.Tokens.EOF);
 		exitingDEBUG("program");
@@ -133,7 +126,7 @@ public class TCparser implements Parser {
 			List<VariableDefinition> fd = functionHeader();
 			Statement s = compoundStatement();
 			exitingDEBUG("definition");
-			return new FunctionDefinition(ty, id, fd, s, read_flag, write_flag);
+			return new FunctionDefinition(ty, id, fd, s, var_num);
 		} else {
 			accept(TCtoken.Tokens.SEMICOLON);
 			exitingDEBUG("definition");
@@ -174,6 +167,7 @@ public class TCparser implements Parser {
 		Identifier id = identifier();
 
 		paramlist.add(new VariableDefinition(ty, id));
+		var_num++;
 
 		if (buff.getTokenType().equals(TCtoken.Tokens.COMMA)) {
 			exitingDEBUG("formalParamList");
@@ -197,45 +191,38 @@ public class TCparser implements Parser {
 		switch ((TCtoken.Tokens) buff.getTokenType()) {
 		case BREAK:
 			statement = breakStatement();
-			exitingDEBUG("statement");
-			return statement;
+			break;
 		case LCURLY:
 			statement = compoundStatement();
-			exitingDEBUG("statement");
-			return statement;
+			break;
 		case IF:
 			statement = ifStatement();
-			exitingDEBUG("statement");
-			return statement;
+			break;
 		case SEMICOLON:
 			statement = nullStatement();
-			exitingDEBUG("statement");
-			return statement;
+			break;
 		case WHILE:
 			statement = whileStatement();
-			exitingDEBUG("statement");
-			return statement;
+			break;
 		case READ:
 			statement = readStatement();
-			exitingDEBUG("statement");
-			return statement;
+			break;
 		case WRITE:
 			statement = writeStatement();
-			exitingDEBUG("statement");
-			return statement;
+			break;
 		case NEWLINE:
 			statement = newlineStatement();
-			exitingDEBUG("statement");
-			return statement;
+			break;
 		case RETURN:
 			statement = returnStatement();
-			exitingDEBUG("statement");
-			return statement;
+			break;
 		default:
 			statement = expressionStatement();
-			exitingDEBUG("statement");
-			return statement;
+			break;
 		}
+
+		exitingDEBUG("statement");
+		return statement;
 	}
 
 	private NullStatement nullStatement() {
@@ -249,7 +236,6 @@ public class TCparser implements Parser {
 		enteringDEBUG("newlineStatement");
 		accept(TCtoken.Tokens.NEWLINE);
 		accept(TCtoken.Tokens.SEMICOLON);
-
 		exitingDEBUG("newlineStatement");
 		return new NewlineStatement();
 	}
@@ -258,7 +244,6 @@ public class TCparser implements Parser {
 		enteringDEBUG("breakStatement");
 		accept(TCtoken.Tokens.BREAK);
 		accept(TCtoken.Tokens.SEMICOLON);
-
 		exitingDEBUG("breakStatement");
 		return new BreakStatement();
 	}
@@ -274,6 +259,7 @@ public class TCparser implements Parser {
 			Identifier id = identifier();
 			accept(TCtoken.Tokens.SEMICOLON);
 			dl.add(new VariableDefinition(ty, id));
+			var_num++;
 		}
 		while (!buff.getTokenType().equals(TCtoken.Tokens.RCURLY)) {
 			sl.add(statement());

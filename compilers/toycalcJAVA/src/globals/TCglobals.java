@@ -30,6 +30,6 @@ public class TCglobals {
     public static boolean codeDump = false;
 
     public static byte debug = 127;
-    public static Integer conditionCount = 0;
+    public static Integer labelCount = 0;
 
 }

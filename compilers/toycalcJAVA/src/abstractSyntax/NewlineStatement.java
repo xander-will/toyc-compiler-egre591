@@ -5,7 +5,7 @@ import abstractSyntax.Statement;
 public class NewlineStatement implements Statement {
 
     public String generateCode() {
-        return "";
+        return stringLit("\n") + write("string");
     }
 
     public String toString() {

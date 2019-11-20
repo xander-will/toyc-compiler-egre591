@@ -2,6 +2,8 @@ package abstractSyntax;
 
 import abstractSyntax.Expression;
 
+import globals.TCglobals;
+
 public class Minus implements Expression {
 
     private Expression expression;
@@ -15,6 +17,6 @@ public class Minus implements Expression {
     }
 
     public String generateCode() {
-        return "";
+        return TCglobals.codetemplate.negate(expression.generateCode());
     }
 }

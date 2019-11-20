@@ -36,19 +36,9 @@ public class IfStatement implements Statement {
 	}
 
 	public String generateCode() {
-		String s = condition.generateCode();
-		if (els != null) {
-			s += "\tifeq ELSE_" + TCglobals.conditionCount + "\n";
-			s += ifs.generateCode();
-			s += "\tgoto " + "ENDIF_" + TCglobals.conditionCount + "\n";
-			s += "ELSE_" + TCglobals.conditionCount + ":\n";
-			s += els.generateCode();
-			s += "ENDIF_" + TCglobals.conditionCount++ + ":\n";
-		} else {
-			s += "\tifeq ENDIF_" + TCglobals.conditionCount + "\n";
-			s += ifs.generateCode();
-			s += "ENDIF_" + TCglobals.conditionCount++ + ":\n";
-		}
-		return s;
+		if (els != null)
+			return TCglobals.codetemplate.if(condition.generateCode(), ifs.generateCode(), els.generateCode());
+		else
+			return TCglobals.codetemplate.if(condition.generateCode(), ifs.generateCode(), null);
 	}
 }

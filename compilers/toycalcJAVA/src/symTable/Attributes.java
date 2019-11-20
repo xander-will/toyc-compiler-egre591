@@ -32,11 +32,23 @@ public class Attributes implements AttributesInterface {
     private DataType dt;
     private Integer id;
     private TCsymTable symbolTable = null;
+    private int arg_num = 0;
 
     public Attributes(String dt, String st, int id) {
         this.st = st_map.get(st);
         this.dt = dt_map.get(dt);
         this.id = id;
+
+        if (st == "function") {
+            this.symbolTable = new TCsymTable();
+        }
+    }
+
+    public Attributes(String dt, String st, int id, int arg_num) {
+        this.st = st_map.get(st);
+        this.dt = dt_map.get(dt);
+        this.id = id;
+        this.arg_num = arg_num;
 
         if (st == "function") {
             this.symbolTable = new TCsymTable();
@@ -58,6 +70,10 @@ public class Attributes implements AttributesInterface {
 
     public int getID() {
         return id;
+    }
+
+    public int getArgNum() {
+        return arg_num;
     }
 
     public String toString() {

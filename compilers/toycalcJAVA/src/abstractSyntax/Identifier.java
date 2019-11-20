@@ -33,13 +33,13 @@ public class Identifier implements Expression {
 
     public String generateLoad() {
         int id = getID();
-        return TCglobals.codetemplate.loadVar(id);
+        return TCglobals.codetemplate.load(id);
     }
 
     public String generateStore() {
         int id = getID();
         TCglobals.codetemplate.function("", "", "");
-        return TCglobals.codetemplate.storeVar(id);
+        return TCglobals.codetemplate.store(id);
     }
 
     public String generateCode() {

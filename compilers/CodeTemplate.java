@@ -4,15 +4,21 @@ public interface CodeTemplate {
 
     public String assignment(String lval, String rval);
 
+    public String call(String name, String args);
+
     public String directive(String dir, String arg);
 
     public String function(String name, String args, String body);
 
     public String init();
 
-    public String getRuntimeFunctions();
+    public String if(String cond, String stmt, String els);
 
-    public String loadVar(Integer id);
+    public String load(Integer id);
+
+    public String main(String body, int var_num);
+
+    public String negate(String stmt)
 
     public String number(String num);
 
@@ -20,9 +26,15 @@ public interface CodeTemplate {
 
     public String read();
 
-    public String returnString();
+    public String return();
 
-    public String storeVar(Integer id);
+    public String runtime();
+
+    public String store(Integer id);
+
+    public String stringLit(String s);
+
+    public String while(String cond, String stmt)
 
     public String write(String type);
 }

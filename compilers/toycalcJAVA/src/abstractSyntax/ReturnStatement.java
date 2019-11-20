@@ -15,7 +15,7 @@ public class ReturnStatement implements Statement {
 
     public String generateCode() {
         String s = expression.generateCode();
-        s += TCglobals.codetemplate.returnString();
+        s += TCglobals.codetemplate.return();
         return s;
     }
 

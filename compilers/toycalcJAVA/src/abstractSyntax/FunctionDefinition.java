@@ -13,17 +13,13 @@ public class FunctionDefinition extends Definition {
 	Identifier id;
 	List<VariableDefinition> fd;
 	Statement st;
-	boolean read;
-	boolean write;
+	int var_num;
 
-	public FunctionDefinition(Type ty, Identifier id, List<VariableDefinition> fd, Statement s, boolean read,
-			boolean write) {
+	public FunctionDefinition(Type ty, Identifier id, List<VariableDefinition> fd, Statement s, int var_num) {
 		this.ty = ty;
 		this.id = id;
 		this.fd = fd;
-		this.st = s;
-		this.read = read;
-		this.write = write;
+		this.var_num = var_num;
 	}
 
 	public String getName() {
@@ -34,16 +30,26 @@ public class FunctionDefinition extends Definition {
 		return ty.getType();
 	}
 
+	public String getNumVars() {
+		return var_num;
+	}
+
+	public String getNumArgs() {
+		return fd.size();
+	}
+
 	public String generateCode() {
-		/*
-		 * Check for read/write boolean, if true call
-		 * codetemplate.addReader()/addWriter()
-		 */
-		String name = id.getName();
-		String args = "[Ljava/lang/String;"; // hardcoded for main, needs to be changed
 		String body = st.generateCode();
 
-		return TCglobals.codetemplate.function(name, args, body);
+		String name = id.getName();
+		if (name.equals("main"))
+			return TCglobals.codetemplate.main(body);
+
+		String args = "";
+		for (VariableDefinition ve : fd)
+			TCglobals.localsymtable.add(ve.getName(), ve.getType(), "variable");
+
+		return TCglobals.codetemplate.function(name, getNumArgs(), body, var_num);
 	}
 
 	public String toString() {
