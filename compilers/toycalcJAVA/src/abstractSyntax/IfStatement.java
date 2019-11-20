@@ -1,6 +1,7 @@
 package abstractSyntax;
 
 import abstractSyntax.Statement;
+import globals.TCglobals;
 import abstractSyntax.PrettyPrint;
 
 public class IfStatement implements Statement {
@@ -35,7 +36,19 @@ public class IfStatement implements Statement {
 	}
 
 	public String generateCode() {
-		return "";
+		String s = condition.generateCode();
+		if (els != null) {
+			s += "\tifeq ELSE_" + TCglobals.conditionCount + "\n";
+			s += ifs.generateCode();
+			s += "\tgoto " + "ENDIF_" + TCglobals.conditionCount + "\n";
+			s += "ELSE_" + TCglobals.conditionCount + ":\n";
+			s += els.generateCode();
+			s += "ENDIF_" + TCglobals.conditionCount++ + ":\n";
+		} else {
+			s += "\tifeq ENDIF_" + TCglobals.conditionCount + "\n";
+			s += ifs.generateCode();
+			s += "ENDIF_" + TCglobals.conditionCount++ + ":\n";
+		}
+		return s;
 	}
-
 }

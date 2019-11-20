@@ -15,6 +15,6 @@ public class StringLiteral implements Expression {
     }
 
     public String generateCode() {
-        return "";
+        return "\tldc " + stringBody + "\n";
     }
 }

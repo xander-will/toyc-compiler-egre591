@@ -38,6 +38,16 @@ public class Program implements AbstractSyntax {
 			}
 		}
 
+		s += "; ==============================================\n" +
+			 "; =========== Begin Runtime Functions ==========\n" +
+			 "; ==============================================\n\n";
+
+		s += TCglobals.codetemplate.getRuntimeFunctions();
+
+		s += "; ==============================================\n" +
+			 "; ============ End Runtime Functions ===========\n" +
+			 "; ==============================================\n\n";
+
 		return s;
 	}
 

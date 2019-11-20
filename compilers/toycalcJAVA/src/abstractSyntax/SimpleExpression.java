@@ -39,10 +39,10 @@ public class SimpleExpression implements Expression {
 	public String toString() {
 		String s = "expr(\n";
 		PrettyPrint.indent();
-		s += expr_list.get(0).generateCode();
+		s += PrettyPrint.spaces() + expr_list.get(0);
 		for (int i = 0; i < op_list.size(); i++) {
-			s += op_list.get(i).generateCode();
-			s += expr_list.get(i + 1).generateCode();
+			s += PrettyPrint.spaces() + op_list.get(i);
+			s += PrettyPrint.spaces() + expr_list.get(i + 1);
 		}
 		PrettyPrint.outdent();
 		s += PrettyPrint.spaces() + ")\n";

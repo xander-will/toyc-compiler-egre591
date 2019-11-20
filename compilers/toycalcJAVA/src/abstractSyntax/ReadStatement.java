@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import abstractSyntax.Statement;
+import globals.TCglobals;
 import abstractSyntax.Identifier;
 import abstractSyntax.PrettyPrint;
 
@@ -27,6 +28,11 @@ public class ReadStatement implements Statement {
 	}
 
 	public String generateCode() {
-		return "";
+		String s = "";
+		for (Identifier i : ids) {
+			s += TCglobals.codetemplate.read();
+			s += i.generateStore();
+		}
+		return s;
 	}
 }

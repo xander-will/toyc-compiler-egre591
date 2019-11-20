@@ -1,5 +1,7 @@
 package globals;
 
+import java.io.File;
+
 import compilers.AbstractSyntax;
 import compilers.SymbolTable;
 import compilers.TargetCode;
@@ -28,5 +30,6 @@ public class TCglobals {
     public static boolean codeDump = false;
 
     public static byte debug = 127;
+    public static Integer conditionCount = 0;
 
 }

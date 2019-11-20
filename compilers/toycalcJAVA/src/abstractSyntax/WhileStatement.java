@@ -1,6 +1,7 @@
 package abstractSyntax;
 
 import abstractSyntax.Statement;
+import globals.TCglobals;
 import abstractSyntax.PrettyPrint;
 
 public class WhileStatement implements Statement {
@@ -25,6 +26,14 @@ public class WhileStatement implements Statement {
 	}
 
 	public String generateCode() {
-		return "";
+
+		String s = "WHILE_" + TCglobals.conditionCount + ":\n";
+		s += condition.generateCode();
+		s += "\tifeq ENDWHILE_" + TCglobals.conditionCount + "\n";
+		s += statement.generateCode();
+		s += "goto WHILE_" + TCglobals.conditionCount + "\n";
+		s += "ENDWHILE_" + TCglobals.conditionCount++ + ":\n";
+
+		return s;
 	}
 }
