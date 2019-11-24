@@ -39,6 +39,9 @@ public class tc {
             Lexer scanner = new TCscanner(TCglobals.inputFileName);
             Parser parser = new TCparser(scanner);
             TCglobals.ast = parser.parse();
+            if (TCglobals.astDump) {
+                    TCoutput.dumpAST(TCglobals.ast);
+                }
 
             TCglobals.codetemplate = new JVMCodeTemplate();
             TCglobals.symtable = new TCsymTable();

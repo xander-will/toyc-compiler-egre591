@@ -6,7 +6,7 @@ import compilers.CodeTemplate;
 
 import globals.TCglobals;
 
-import JVM.JVMRuntime;
+import codeGen.JVM.JVMRuntime;
 
 public class JVMCodeTemplate implements CodeTemplate {
 
@@ -22,10 +22,26 @@ public class JVMCodeTemplate implements CodeTemplate {
         String s = args + header + name + "(";
         for (int i = 0; i < TCglobals.symtable.get(name).getArgNum(); i++)
             s += "I";
-        s += ")I";
+        s += ")I\n";
 
         return s;
     }
+
+    public String conditional(String cond, String stmt, String els) {
+        String l_else = "ELSE_" + TCglobals.labelCount.toString() + "\n";
+        String l_endif = "ENDIF_" + TCglobals.labelCount.toString() + "\n";
+
+        String s = "";
+		if (els != null) {
+			s += cond + "\tifeq " + l_else;
+			s += stmt + "\tgoto " + l_endif;
+			s += l_else + els + l_endif;
+		} else {
+            s += "\tifeq " + l_endif;
+			s += stmt + l_endif;
+		}
+		return s;
+	}
 
     public String directive(String dir, String arg) {
         return "." + dir + " " + arg + "\n";
@@ -36,7 +52,7 @@ public class JVMCodeTemplate implements CodeTemplate {
         for (int i = 0; i < arg_num; i++)
             args += "I";
 
-        String fh = functionHeader(var_num, 10); // hardcoded for convenience (toyCalc does this as well)
+        String fh = functionHeader(10, var_num); // hardcoded for convenience (toyCalc does this as well)
         return functionWrapper(name, args, "I", fh + body);
     }
 
@@ -66,22 +82,6 @@ public class JVMCodeTemplate implements CodeTemplate {
         return s;
     }
 
-    public String if(String cond, String stmt, String els) {
-        l_else = "ELSE_" + TCglobals.labelCount.toString() + "\n";
-        l_endif = "ENDIF_" + TCglobals.labelCount.toString() + "\n";
-
-        String s = "";
-		if (els != null) {
-			s += "\tifeq " + l_else;
-			s += stmt + "\tgoto " + l_endif;
-			s += l_else + els + l_endif;
-		} else {
-            s += "\tifeq " + l_endif;
-			s += stmt + l_endif;
-		}
-		return s;
-	}
-
     public String load(Integer id) {
         if (0 <= id && id <= 3)
             return "\tiload_" + id.toString() + "\n";
@@ -89,9 +89,21 @@ public class JVMCodeTemplate implements CodeTemplate {
             return "iload " + id.toString() + "\n";
     }
 
+    public String loop(String cond, String stmt) {
+		String l_loop = "LOOP_" + TCglobals.labelCount.toString() + "\n";
+        String l_endloop = "ENDLOOP_" + TCglobals.labelCount.toString() + "\n";
+
+        String s = l_loop + cond;
+        s += "\tifeq " + l_endloop;
+        s += stmt + "\tgoto " + l_loop;
+        s += l_endloop;
+
+        return s;
+	}
+
     public String main(String body, int var_num) {
-        String s = functionHeader(var_num, 10);
-        return function("main", "[java/lang/String;", "V", s + body);
+        String s = functionHeader(10, var_num);
+        return functionWrapper("main", "[java/lang/String;", "V", s + body);
     }
 
     public String negate(String stmt) {
@@ -115,17 +127,17 @@ public class JVMCodeTemplate implements CodeTemplate {
         op_table.put("/", "idiv");
 
         // these call from the runtime
-        String header = "\tinvokestatic " + TCglobals.outputClassFileName + ".";
-        String not = header + "toyCNot(I)I\n";
-        op_table.put("<", header + "toyCLessThan(II)I\n");
-        op_table.put(">", header + "toyCGreaterThan(II)I\n");
-        op_table.put("==", header + "toyCEquals(II)I\n");
+        String header = "invokestatic " + TCglobals.outputClassFileName + ".";
+        String not = header + "toyCNot(I)I";
+        op_table.put("<", header + "toyCLessThan(II)I");
+        op_table.put(">", header + "toyCGreaterThan(II)I");
+        op_table.put("==", header + "toyCEquals(II)I");
         op_table.put("!", not);
-        op_table.put("||", "toyCOr(II)I\n");
-        op_table.put("&&", "toyCAnd(II)I\n");
-        op_table.put("<=", header + "toyCGreaterThan(II)I\n" + not); // not greater than
-        op_table.put(">=", header + "toyCLessThan(II)I\n" + not); // not less than
-        op_table.put("!=", header + "toyCEquals(II)I\n" + not);
+        op_table.put("||", "toyCOr(II)I");
+        op_table.put("&&", "toyCAnd(II)I");
+        op_table.put("<=", header + "toyCGreaterThan(II)I" + not); // not greater than
+        op_table.put(">=", header + "toyCLessThan(II)I" + not); // not less than
+        op_table.put("!=", header + "toyCEquals(II)I" + not);
     }
     public String operator(String op) {
         return "\t" + op_table.get(op) + "\n";
@@ -135,7 +147,7 @@ public class JVMCodeTemplate implements CodeTemplate {
         return "\tinvokestatic " + TCglobals.outputClassFileName + ".toyCRead()I\n";
     }
 
-    public String return() {
+    public String ret() {
         return "\treturn\n";
     }
 
@@ -158,20 +170,8 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String stringLit(String s) {
-        return "\tldc \"" + s + "\"\n"
+        return "\tldc \"" + s + "\"\n";
     }
-
-    public String while(String cond, String stmt) {
-		l_loop = "LOOP_" + TCglobals.labelCount.toString() + "\n";
-        l_endloop = "ENDLOOP_" + TCglobals.labelCount.toString() + "\n";
-
-        String s = l_loop + cond;
-        s += "\tifeq " + l_endloop;
-        s += stmt + "\tgoto " + l_loop;
-        s += l_endloop;
-
-        return s;
-	}
 
     public String write(String type) {
         if (type.equals("int")) {

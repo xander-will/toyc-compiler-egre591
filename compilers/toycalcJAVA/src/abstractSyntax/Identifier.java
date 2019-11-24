@@ -38,7 +38,6 @@ public class Identifier implements Expression {
 
     public String generateStore() {
         int id = getID();
-        TCglobals.codetemplate.function("", "", "");
         return TCglobals.codetemplate.store(id);
     }
 

@@ -21,14 +21,14 @@ public class TCsymTable implements SymbolTable {
     }
 
     public void add(String name, String data_type, String sem_type, int arg_num) {
-        this.st.put(name, new Attributes(data_type, sem_type, next_entry_id++, arg_num))
+        this.st.put(name, new Attributes(data_type, sem_type, next_entry_id++, arg_num));
     }
 
     public Attributes get(String id) {
         return this.st.get(id);
     }
 
-    public boolean containsId(String id) {
+    public boolean containsID(String id) {
         return this.st.containsKey(id);
     }
 

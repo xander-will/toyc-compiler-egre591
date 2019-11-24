@@ -5,6 +5,8 @@ import java.util.List;
 import abstractSyntax.Expression;
 import abstractSyntax.PrettyPrint;
 
+import output.TCoutput;
+
 import globals.TCglobals;
 
 public class FunctionCall implements Expression {
@@ -37,7 +39,7 @@ public class FunctionCall implements Expression {
 
 	public String generateCode() {
 		if (!TCglobals.symtable.containsID(id.getName()))
-			TCoutput.reportSEMANTIC_ERROR("", id.getName() + " has not been declared")
+			TCoutput.reportSEMANTIC_ERROR("", id.getName() + " has not been declared");
 
 		String args = "";
 		for (Expression e : ap)

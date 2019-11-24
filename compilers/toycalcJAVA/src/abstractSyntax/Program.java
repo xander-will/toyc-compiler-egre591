@@ -32,7 +32,7 @@ public class Program implements AbstractSyntax {
 
 		for (Definition def : dl) {
 			if (def instanceof FunctionDefinition) {
-				TCglobals.symtable.add(def.getName(), def.getType(), "function", def.getArgNum());
+				TCglobals.symtable.add(def.getName(), def.getType(), "function", ((FunctionDefinition)def).getNumArgs());
 				TCglobals.localsymtable = TCglobals.symtable.get(def.getName()).getSymtable();
 				s += def.generateCode() + "\n";
 			}

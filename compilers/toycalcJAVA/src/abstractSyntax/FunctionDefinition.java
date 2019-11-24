@@ -19,6 +19,7 @@ public class FunctionDefinition extends Definition {
 		this.ty = ty;
 		this.id = id;
 		this.fd = fd;
+		this.st = s;
 		this.var_num = var_num;
 	}
 
@@ -30,24 +31,22 @@ public class FunctionDefinition extends Definition {
 		return ty.getType();
 	}
 
-	public String getNumVars() {
+	public int getNumVars() {
 		return var_num;
 	}
 
-	public String getNumArgs() {
+	public int getNumArgs() {
 		return fd.size();
 	}
 
 	public String generateCode() {
+		for (VariableDefinition ve : fd)
+			TCglobals.localsymtable.add(ve.getName(), ve.getType(), "variable");
 		String body = st.generateCode();
 
 		String name = id.getName();
 		if (name.equals("main"))
-			return TCglobals.codetemplate.main(body);
-
-		String args = "";
-		for (VariableDefinition ve : fd)
-			TCglobals.localsymtable.add(ve.getName(), ve.getType(), "variable");
+			return TCglobals.codetemplate.main(body, var_num);
 
 		return TCglobals.codetemplate.function(name, getNumArgs(), body, var_num);
 	}

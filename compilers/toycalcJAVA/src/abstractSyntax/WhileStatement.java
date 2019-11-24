@@ -26,6 +26,6 @@ public class WhileStatement implements Statement {
 	}
 
 	public String generateCode() {
-		return TCglobals.codetemplate.while(condition.generateCode(), statement.generateCode())
+		return TCglobals.codetemplate.loop(condition.generateCode(), statement.generateCode());
 	}
 }

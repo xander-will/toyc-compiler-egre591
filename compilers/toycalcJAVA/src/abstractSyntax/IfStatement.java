@@ -37,8 +37,8 @@ public class IfStatement implements Statement {
 
 	public String generateCode() {
 		if (els != null)
-			return TCglobals.codetemplate.if(condition.generateCode(), ifs.generateCode(), els.generateCode());
+			return TCglobals.codetemplate.conditional(condition.generateCode(), ifs.generateCode(), els.generateCode());
 		else
-			return TCglobals.codetemplate.if(condition.generateCode(), ifs.generateCode(), null);
+			return TCglobals.codetemplate.conditional(condition.generateCode(), ifs.generateCode(), null);
 	}
 }
