@@ -7,7 +7,7 @@ import globals.TCglobals;
 public class NewlineStatement implements Statement {
 
     public String generateCode() {
-        return TCglobals.codetemplate.stringLit("\\n") + TCglobals.codetemplate.write("string");
+        return TCglobals.codetemplate.stringLit("\"\\n\"") + TCglobals.codetemplate.write("string");
     }
 
     public String toString() {

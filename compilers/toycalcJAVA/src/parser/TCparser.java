@@ -88,6 +88,7 @@ public class TCparser implements Parser {
 		TCtoken.Tokens tok = (Tokens) t.getTokenType();
 		return tok.equals(TCtoken.Tokens.INT) || tok.equals(TCtoken.Tokens.CHAR);
 	}
+
 	private void enteringDEBUG(String string) {
 		if (verbose || debugLevel == 2 || debugLevel == 0)
 			System.err.println("[PARSER] ENTERING [" + string + "]");
@@ -252,6 +253,7 @@ public class TCparser implements Parser {
 		enteringDEBUG("compoundStatement");
 		ArrayList<VariableDefinition> dl = new ArrayList<VariableDefinition>();
 		ArrayList<Statement> sl = new ArrayList<Statement>();
+		ReturnStatement rs = null;
 
 		accept(TCtoken.Tokens.LCURLY);
 		while (isTypeToken(buff)) {
@@ -262,8 +264,15 @@ public class TCparser implements Parser {
 			var_num++;
 		}
 		while (!buff.getTokenType().equals(TCtoken.Tokens.RCURLY)) {
+			// if (buff.getTokenType().equals(TCtoken.Tokens.RETURN)) {
+			// sl.add(rs = returnStatement());
+			// }
 			sl.add(statement());
 		}
+		// if (rs == null) {
+		// TCoutput.reportSYNTAX_ERROR(scanner, "reached end of function without return
+		// statement");
+		// }
 		accept(TCtoken.Tokens.RCURLY);
 
 		exitingDEBUG("compoundStatement");

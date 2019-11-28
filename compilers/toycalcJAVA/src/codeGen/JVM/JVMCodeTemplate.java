@@ -1,11 +1,11 @@
 package codeGen.JVM;
 
 import java.util.HashMap;
+import java.util.regex.*;
 
 import compilers.CodeTemplate;
 
 import globals.TCglobals;
-
 import codeGen.JVM.JVMRuntime;
 
 public class JVMCodeTemplate implements CodeTemplate {
@@ -28,17 +28,17 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String conditional(String cond, String stmt, String els) {
-        String l_else = "ELSE_" + TCglobals.labelCount.toString() + "\n";
-        String l_endif = "ENDIF_" + TCglobals.labelCount.toString() + "\n";
+        String l_else = "ELSE_" + TCglobals.labelCount.toString();
+        String l_endif = "ENDIF_" + TCglobals.labelCount.toString();
 
         String s = "";
         if (els != null) {
-            s += cond + "\tifeq " + l_else;
-            s += stmt + "\tgoto " + l_endif;
-            s += l_else + els + l_endif;
+            s += cond + "\tifeq " + l_else + "\n";
+            s += stmt + "\tgoto " + l_endif + "\n";
+            s += l_else + ":\n" + els + l_endif + ":\n";
         } else {
             s += "\tifeq " + l_endif;
-            s += stmt + l_endif;
+            s += stmt + l_endif + ":\n";
         }
         return s;
     }
@@ -60,6 +60,15 @@ public class JVMCodeTemplate implements CodeTemplate {
         String s = ".method public static " + name + "(" + args + ")" + ret + "\n";
         s += body;
         s += ".end method\n";
+
+        Pattern p = Pattern.compile("ENDIF_\\d+:\n.end method");
+        Matcher m = p.matcher(s);
+
+        if (m.find()) {
+            int endif_num = Integer.parseInt(m.group(0).replaceAll("[^0-9]+", ""));
+            s = s.replaceAll("\tgoto ENDIF_" + endif_num + "\n", "");
+            s = s.replaceAll("ENDIF_\\d+:\n*\\.end method", ".end method");
+        }
         return s;
     }
 
@@ -90,8 +99,8 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String loop(String cond, String stmt) {
-        String l_loop = "LOOP_" + TCglobals.labelCount.toString() + "\n";
-        String l_endloop = "ENDLOOP_" + TCglobals.labelCount.toString() + "\n";
+        String l_loop = "LOOP_" + TCglobals.labelCount.toString() + ":\n";
+        String l_endloop = "ENDLOOP_" + TCglobals.labelCount.toString() + ":\n";
 
         String s = l_loop + cond;
         s += "\tifeq " + l_endloop;
@@ -103,7 +112,7 @@ public class JVMCodeTemplate implements CodeTemplate {
 
     public String main(String body, int var_num) {
         String s = functionHeader(10, var_num);
-        return functionWrapper("main", "[java/lang/String;", "V", s + body);
+        return functionWrapper("main", "[Ljava/lang/String;", "V", s + body).replaceAll("ireturn", "return");
     }
 
     public String negate(String stmt) {
@@ -149,7 +158,7 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String ret() {
-        return "\treturn\n";
+        return "\tireturn\n";
     }
 
     public String runtime() {
@@ -170,7 +179,7 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String stringLit(String s) {
-        return "\tldc \"" + s + "\"\n";
+        return "\tldc " + s + "\n";
     }
 
     public String write(String type) {

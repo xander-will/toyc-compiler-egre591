@@ -1,1 +1,1 @@
-ant clean && ant compile && ant -Dsource="%1" -Dflags="-v" test
+ant clean && ant -Dsource="%1" -Dflags="-v" test

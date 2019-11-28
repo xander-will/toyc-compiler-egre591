@@ -100,7 +100,7 @@ public class JVMRuntime {
 		"\t.limit locals 1\n" +
 		"\tgetstatic java/lang/System/out Ljava/io/PrintStream;\n" +
 		"\tiload_0\n" +
-		"\tinvokevirtual java/io/PrintStream/println(I)V\n" +
+		"\tinvokevirtual java/io/PrintStream/print(I)V\n" +
 		"\treturn\n" +
         ".end method\n\n" +
         ".method private static toyCWrite(Ljava/lang/String;)V\n" +
@@ -108,7 +108,7 @@ public class JVMRuntime {
 		"\t.limit locals 1\n" +
 		"\tgetstatic java/lang/System/out Ljava/io/PrintStream;\n" +
 		"\taload_0\n" +
-		"\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
+		"\tinvokevirtual java/io/PrintStream/print(Ljava/lang/String;)V\n" +
 		"\treturn\n" +
 		".end method\n\n";
 	

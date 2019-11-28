@@ -19,7 +19,6 @@ import java.util.List;
 
 import compilers.Parser;
 import compilers.Lexer;
-import compilers.CodeGenerator;
 import compilers.CompilationErrorException;
 import compilers.CodeGenerationException;
 
@@ -40,8 +39,8 @@ public class tc {
             Parser parser = new TCparser(scanner);
             TCglobals.ast = parser.parse();
             if (TCglobals.astDump) {
-                    TCoutput.dumpAST(TCglobals.ast);
-                }
+                TCoutput.dumpAST(TCglobals.ast);
+            }
 
             TCglobals.codetemplate = new JVMCodeTemplate();
             TCglobals.symtable = new TCsymTable();
