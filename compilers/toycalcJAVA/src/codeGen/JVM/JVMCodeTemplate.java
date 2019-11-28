@@ -32,16 +32,16 @@ public class JVMCodeTemplate implements CodeTemplate {
         String l_endif = "ENDIF_" + TCglobals.labelCount.toString() + "\n";
 
         String s = "";
-		if (els != null) {
-			s += cond + "\tifeq " + l_else;
-			s += stmt + "\tgoto " + l_endif;
-			s += l_else + els + l_endif;
-		} else {
+        if (els != null) {
+            s += cond + "\tifeq " + l_else;
+            s += stmt + "\tgoto " + l_endif;
+            s += l_else + els + l_endif;
+        } else {
             s += "\tifeq " + l_endif;
-			s += stmt + l_endif;
-		}
-		return s;
-	}
+            s += stmt + l_endif;
+        }
+        return s;
+    }
 
     public String directive(String dir, String arg) {
         return "." + dir + " " + arg + "\n";
@@ -90,7 +90,7 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String loop(String cond, String stmt) {
-		String l_loop = "LOOP_" + TCglobals.labelCount.toString() + "\n";
+        String l_loop = "LOOP_" + TCglobals.labelCount.toString() + "\n";
         String l_endloop = "ENDLOOP_" + TCglobals.labelCount.toString() + "\n";
 
         String s = l_loop + cond;
@@ -99,7 +99,7 @@ public class JVMCodeTemplate implements CodeTemplate {
         s += l_endloop;
 
         return s;
-	}
+    }
 
     public String main(String body, int var_num) {
         String s = functionHeader(10, var_num);
@@ -139,6 +139,7 @@ public class JVMCodeTemplate implements CodeTemplate {
         op_table.put(">=", header + "toyCLessThan(II)I" + not); // not less than
         op_table.put("!=", header + "toyCEquals(II)I" + not);
     }
+
     public String operator(String op) {
         return "\t" + op_table.get(op) + "\n";
     }
@@ -152,13 +153,12 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String runtime() {
-        String s =  "; ==============================================\n" +
-			        "; =========== Begin Runtime Functions ==========\n" +
-			        "; ==============================================\n\n";
+        String s = "; ==============================================\n"
+                + "; =========== Begin Runtime Functions ==========\n"
+                + "; ==============================================\n\n";
         s += JVMRuntime.runtimeFunctions;
-        s += "; ==============================================\n" +
-			 "; ============ End Runtime Functions ===========\n" +
-			 "; ==============================================\n\n";
+        s += "; ==============================================\n" + "; ============ End Runtime Functions ===========\n"
+                + "; ==============================================\n\n";
         return s;
     }
 
@@ -180,5 +180,4 @@ public class JVMCodeTemplate implements CodeTemplate {
             return "\tinvokestatic " + TCglobals.outputClassFileName + ".toyCWrite(Ljava/lang/String;)V\n";
         }
     }
-
 }

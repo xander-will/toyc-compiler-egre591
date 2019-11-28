@@ -1,0 +1,1 @@
+java -jar jasmin.jar %1.j && java %1

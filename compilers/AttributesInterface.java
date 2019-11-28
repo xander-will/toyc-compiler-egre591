@@ -6,4 +6,6 @@ public interface AttributesInterface {
     public SymbolTable getSymtable();
 
     public int getID();
+
+    public int getArgNum();
 }

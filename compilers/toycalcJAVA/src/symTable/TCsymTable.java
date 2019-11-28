@@ -24,12 +24,12 @@ public class TCsymTable implements SymbolTable {
         this.st.put(name, new Attributes(data_type, sem_type, next_entry_id++, arg_num));
     }
 
-    public Attributes get(String id) {
-        return this.st.get(id);
-    }
-
     public boolean containsID(String id) {
         return this.st.containsKey(id);
+    }
+
+    public Attributes get(String id) {
+        return this.st.get(id);
     }
 
     public void print() {
