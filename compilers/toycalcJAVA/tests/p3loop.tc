@@ -12,10 +12,7 @@ int main() {
 	while (y = y - 1) {
 		write("y: ");
 		write(y);
-		if (y == 2) {
-			break;
-		}
 		newline;
-		return 0;
 	}
+	return 0;
 }

@@ -62,8 +62,7 @@ public class JVMCodeTemplate implements CodeTemplate {
         s += body;
         s += ".end method\n";
 
-        // ADD REPLACEMENT FOR ENDLOOP_ TAG
-        Pattern p = Pattern.compile("ENDIF_\\d+:\n.end method");
+        Pattern p = Pattern.compile("ENDIF_\\d+:\n\\.end method");
         Matcher m = p.matcher(s);
 
         if (m.find()) {
@@ -71,6 +70,15 @@ public class JVMCodeTemplate implements CodeTemplate {
             s = s.replaceAll("\tgoto ENDIF_" + endif_num + "\n", "");
             s = s.replaceAll("ENDIF_\\d+:\n*\\.end method", ".end method");
         }
+
+        p = Pattern.compile("ENDLOOP_\\d+:\n\\.end method");
+        Matcher n = p.matcher(s);
+
+        // For testing right now, change later
+        if (n.find()) {
+            s = s.replaceAll("\n*\\.end method", "\n\ticonst 0\n\tireturn\n.end method");
+        }
+
         return s;
     }
 
@@ -94,7 +102,10 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String load(Integer id) {
-        return "\tiload " + id.toString() + "\n";
+        if (0 <= id && id <= 3)
+            return "\tiload_" + id.toString() + "\n";
+        else
+            return "iload " + id.toString() + "\n";
     }
 
     public String loop(String cond, String stmt) {
@@ -106,13 +117,13 @@ public class JVMCodeTemplate implements CodeTemplate {
         s += stmt + "\tgoto " + l_loop + "\n";
         s += l_endloop + ":\n";
 
-        Pattern p = Pattern.compile("\tistore \\d+\n\tifeq ENDLOOP_");
+        Pattern p = Pattern.compile("\tistore(_|\\s)\\d+\n\tifeq ENDLOOP_");
         Matcher m = p.matcher(s);
 
         // Assignment in loop conditional, must re-load onto stack after storing
         if (m.find()) {
             int istore_num = Integer.parseInt(m.group(0).replaceAll("[^0-9]+", ""));
-            s = s.replaceAll("\tistore " + istore_num + "\n",
+            s = s.replaceAll("\tistore(_|\\s)" + istore_num + "\n",
                     "\tistore " + istore_num + "\n\tiload " + istore_num + "\n");
         }
 
@@ -182,7 +193,10 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String store(Integer id) {
-        return "\tistore " + id.toString() + "\n";
+        if (0 <= id && id <= 3)
+            return "\tistore_" + id.toString() + "\n";
+        else
+            return "\tistore " + id.toString() + "\n";
     }
 
     public String stringLit(String s) {
