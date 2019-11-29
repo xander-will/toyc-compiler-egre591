@@ -1,0 +1,82 @@
+int main() {
+	int y;
+	int x;
+	y = 0;
+	x = 10;
+	
+	if (x != 9) {
+		write ("Not equals true");
+		newline;
+	}
+	
+	if (x == 10) {
+		write("Equals true");
+		newline;
+	}
+	
+	if (x > 9) {
+		write("Greater true");
+		newline;
+	}
+	
+	if (x < 11) {
+		write("Lesser true");
+		newline;
+	}
+	
+	if (x >= 10) {
+		write("Greater EQ true");
+		newline;
+	}
+	
+	if (x <= 10) {
+		write("Lesser EQ true");
+		newline;
+	}
+	
+	if (x || y) {
+		write("Or true");
+		newline;
+	}
+	
+	if (x && y) {
+		write("And true");
+		newline;
+	}
+	
+	else {
+		write("And false");
+		newline;
+	}
+	
+	if (1 && 2 && 3 && 4 && 5 && x) {
+		write("Wow!");
+		newline;
+	}
+	
+	if (!y) {
+		write("Not y true");
+		newline;
+	}
+	
+	if (y) {
+		write("Cool");
+		newline;
+	}
+	else if (1) {
+		write("ELIF");
+		newline;
+	}
+	else {
+		write("Else");
+		newline;
+	}
+	
+	if (( x + 2 + 3) == (16 - 1)) {
+		write("Compound evaluations");
+		newline;
+	}
+	
+
+	return 10;
+}

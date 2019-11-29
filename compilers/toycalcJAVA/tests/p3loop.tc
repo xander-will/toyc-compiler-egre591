@@ -1,0 +1,21 @@
+int main() {
+	int x;
+	int y;
+	x = 5;
+	y = 5;
+	while (x) {
+		write(">> ");
+		read(x);
+		newline;
+	}
+	
+	while (y = y - 1) {
+		write("y: ");
+		write(y);
+		if (y == 2) {
+			break;
+		}
+		newline;
+		return 0;
+	}
+}

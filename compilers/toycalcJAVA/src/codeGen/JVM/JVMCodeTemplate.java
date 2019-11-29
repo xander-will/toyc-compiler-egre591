@@ -12,7 +12,6 @@ public class JVMCodeTemplate implements CodeTemplate {
 
     public String assignment(String lval, String rval) {
         String s = rval;
-        s += "\tdup\n";
         s += lval;
         return s;
     }
@@ -37,9 +36,11 @@ public class JVMCodeTemplate implements CodeTemplate {
             s += stmt + "\tgoto " + l_endif + "\n";
             s += l_else + ":\n" + els + l_endif + ":\n";
         } else {
-            s += "\tifeq " + l_endif;
+            s += cond + "\tifeq " + l_endif + "\n";
             s += stmt + l_endif + ":\n";
         }
+
+        TCglobals.labelCount++;
         return s;
     }
 
@@ -61,6 +62,7 @@ public class JVMCodeTemplate implements CodeTemplate {
         s += body;
         s += ".end method\n";
 
+        // ADD REPLACEMENT FOR ENDLOOP_ TAG
         Pattern p = Pattern.compile("ENDIF_\\d+:\n.end method");
         Matcher m = p.matcher(s);
 
@@ -92,21 +94,29 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String load(Integer id) {
-        if (0 <= id && id <= 3)
-            return "\tiload_" + id.toString() + "\n";
-        else
-            return "iload " + id.toString() + "\n";
+        return "\tiload " + id.toString() + "\n";
     }
 
     public String loop(String cond, String stmt) {
-        String l_loop = "LOOP_" + TCglobals.labelCount.toString() + ":\n";
-        String l_endloop = "ENDLOOP_" + TCglobals.labelCount.toString() + ":\n";
+        String l_loop = "LOOP_" + TCglobals.labelCount.toString();
+        String l_endloop = "ENDLOOP_" + TCglobals.labelCount.toString();
 
-        String s = l_loop + cond;
-        s += "\tifeq " + l_endloop;
-        s += stmt + "\tgoto " + l_loop;
-        s += l_endloop;
+        String s = l_loop + ":\n" + cond;
+        s += "\tifeq " + l_endloop + "\n";
+        s += stmt + "\tgoto " + l_loop + "\n";
+        s += l_endloop + ":\n";
 
+        Pattern p = Pattern.compile("\tistore \\d+\n\tifeq ENDLOOP_");
+        Matcher m = p.matcher(s);
+
+        // Assignment in loop conditional, must re-load onto stack after storing
+        if (m.find()) {
+            int istore_num = Integer.parseInt(m.group(0).replaceAll("[^0-9]+", ""));
+            s = s.replaceAll("\tistore " + istore_num + "\n",
+                    "\tistore " + istore_num + "\n\tiload " + istore_num + "\n");
+        }
+
+        TCglobals.labelCount++;
         return s;
     }
 
@@ -142,11 +152,11 @@ public class JVMCodeTemplate implements CodeTemplate {
         op_table.put(">", header + "toyCGreaterThan(II)I");
         op_table.put("==", header + "toyCEquals(II)I");
         op_table.put("!", not);
-        op_table.put("||", "toyCOr(II)I");
-        op_table.put("&&", "toyCAnd(II)I");
-        op_table.put("<=", header + "toyCGreaterThan(II)I" + not); // not greater than
-        op_table.put(">=", header + "toyCLessThan(II)I" + not); // not less than
-        op_table.put("!=", header + "toyCEquals(II)I" + not);
+        op_table.put("||", header + "toyCOr(II)I");
+        op_table.put("&&", header + "toyCAnd(II)I");
+        op_table.put("<=", header + "toyCGreaterThan(II)I\n" + not); // not greater than
+        op_table.put(">=", header + "toyCLessThan(II)I\n" + not); // not less than
+        op_table.put("!=", header + "toyCEquals(II)I\n" + not);
     }
 
     public String operator(String op) {
@@ -172,10 +182,7 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String store(Integer id) {
-        if (0 <= id && id <= 3)
-            return "\tistore_" + id.toString() + "\n";
-        else
-            return "istore " + id.toString() + "\n";
+        return "\tistore " + id.toString() + "\n";
     }
 
     public String stringLit(String s) {
