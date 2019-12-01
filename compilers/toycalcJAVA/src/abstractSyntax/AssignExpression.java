@@ -20,39 +20,36 @@ public class AssignExpression implements Expression {
 		this.right = right;
 	}
 
-	public String generateCode() {
-		String rval = ""
-		String lval = "";
-		if (left instanceof Identifier) {
-			if (right instanceof AssignExpression) {
-
-				// Idea that works for normal constant assignment
-
-				// if (right instanceof AssignExpression) {
-				// Pattern p = Pattern.compile("\tldc_?\\d+\n");
-				// Matcher m = p.matcher(rval);
-				// if (m.find()) {
-				// rval += m.group(0);
-				// }
-				// }
-
-			}
-			else {
-				rval += right.generateCode();
-			}
-
-			lval += ((Identifier) left).generateStore();
-
-		} else {
+	private void checkLeft() {
+		if (!(left instanceof Identifier))
 			TCoutput.reportSEMANTIC_ERROR("",
 					"Only variables may be assigned to, (" + left.toString() + "is an expression)");
-		}
+	}
+
+	public String generateCode() {
+		String rval, lval;
+
+		checkLeft();
+		lval = ((Identifier)left).generateStore();
+		if (right instanceof AssignExpression)
+			rval = ((AssignExpression)right).generateMultiAssign();
+		else
+			rval = right.generateCode();
 
 		return TCglobals.codetemplate.assignment(lval, rval);
 	}
 
 	public String generateMultiAssign() {
+		String rval, lval;
 
+		checkLeft();
+		lval = ((Identifier)left).generateStore();
+		if (right instanceof AssignExpression)
+			rval = ((AssignExpression)right).generateMultiAssign();
+		else
+			rval = right.generateCode();
+
+		return TCglobals.codetemplate.multiassignment(lval, rval);
 	}
 
 	public String toString() {

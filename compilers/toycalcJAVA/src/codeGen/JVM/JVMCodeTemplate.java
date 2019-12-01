@@ -17,8 +17,12 @@ public class JVMCodeTemplate implements CodeTemplate {
         return s;
     }
 
-    public String assignmentDup(String rval, String lval) {
-        return "";
+    public String multiassignment(String lval, String rval) {
+        String s = "";
+        s += rval;
+        s += "\tdup\n";
+        s += lval;
+        return s;
     }
 
     public String call(String name, String args) {

@@ -4,7 +4,7 @@ public interface CodeTemplate {
 
     public String assignment(String lval, String rval);
 
-    public String assignmentDup(String rval, String lval);
+    public String multiassignment(String lval, String rval);
 
     public String call(String name, String args);
 
