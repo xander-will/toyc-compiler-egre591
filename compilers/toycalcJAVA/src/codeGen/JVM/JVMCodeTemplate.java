@@ -11,9 +11,14 @@ import codeGen.JVM.JVMRuntime;
 public class JVMCodeTemplate implements CodeTemplate {
 
     public String assignment(String lval, String rval) {
-        String s = rval;
+        String s = "";
+        s += rval;
         s += lval;
         return s;
+    }
+
+    public String assignmentDup(String rval, String lval) {
+        return "";
     }
 
     public String call(String name, String args) {

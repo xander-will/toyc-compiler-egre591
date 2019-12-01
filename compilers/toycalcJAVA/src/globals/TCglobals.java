@@ -1,7 +1,5 @@
 package globals;
 
-import java.io.File;
-
 import compilers.AbstractSyntax;
 import compilers.SymbolTable;
 import compilers.TargetCode;

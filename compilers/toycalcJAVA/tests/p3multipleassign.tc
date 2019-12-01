@@ -7,7 +7,7 @@ int main() {
 	y = 6;
 	z = 7;
 	
-	x = y = z = 7;
+	x = y = z = x * 5;
 	write(x);
 	write(y);
 	write(z);
