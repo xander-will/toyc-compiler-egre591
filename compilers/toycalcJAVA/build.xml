@@ -2,7 +2,7 @@
 <!-- or -->
 <!-- ant -projecthelp -->
 
-<project name="toycalc" basedir="." default="main">
+<project name="toyC" basedir="." default="main">
     <property name="src.dir"     value="src"/>
     <property name="build.dir"   value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
@@ -48,7 +48,7 @@
     </target>
 
     <target name="jar" depends="compile" 
-           description="build toycalc compiler jar file">
+           description="build toyC compiler jar file">
         <mkdir dir="${jar.dir}"/>
         <jar destfile="${jar.dir}/tc.jar" basedir="${classes.dir}">
             <manifest>
@@ -58,7 +58,7 @@
     </target>
 
     <target name="jasmin" depends="compile,test" 
-           description="assembly toycalc program (usage: -Dsource=myProgram)">
+           description="assembly toyC program (usage: -Dsource=myProgram)">
         <echo message="usage: -Dsource=myProgram (without .j)" />
         <java jar="jasmin.jar" fork="true" >
            <arg line="${source}.j"/>

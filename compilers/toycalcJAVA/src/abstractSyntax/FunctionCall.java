@@ -6,7 +6,6 @@ import abstractSyntax.Expression;
 import abstractSyntax.PrettyPrint;
 
 import output.TCoutput;
-
 import globals.TCglobals;
 
 public class FunctionCall implements Expression {
@@ -38,6 +37,7 @@ public class FunctionCall implements Expression {
 	}
 
 	public String generateCode() {
+		String s = "";
 		if (!TCglobals.symtable.containsID(id.getName()))
 			TCoutput.reportSEMANTIC_ERROR("", id.getName() + " has not been declared");
 
@@ -45,7 +45,12 @@ public class FunctionCall implements Expression {
 		for (Expression e : ap)
 			args += e.generateCode();
 
-		return TCglobals.codetemplate.call(id.getName(), args);
+		s = TCglobals.codetemplate.call(id.getName(), args);
+
+		if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+			TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
+
+		return s;
 	}
 
 }

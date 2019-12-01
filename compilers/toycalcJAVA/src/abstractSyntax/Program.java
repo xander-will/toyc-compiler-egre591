@@ -11,6 +11,7 @@ import abstractSyntax.VariableDefinition;
 import abstractSyntax.PrettyPrint;
 
 import globals.TCglobals;
+import output.TCoutput;
 
 public class Program implements AbstractSyntax {
 
@@ -32,15 +33,18 @@ public class Program implements AbstractSyntax {
 
 		for (Definition def : dl) {
 			if (def instanceof FunctionDefinition) {
-				TCglobals.symtable.add(def.getName(), def.getType(), "function", ((FunctionDefinition)def).getNumArgs());
+				TCglobals.symtable.add(def.getName(), def.getType(), "function",
+						((FunctionDefinition) def).getNumArgs());
 				TCglobals.localsymtable = TCglobals.symtable.get(def.getName()).getSymtable();
 				s += def.generateCode() + "\n";
-			}
-			else {
+			} else {
 				TCglobals.symtable.add(def.getName(), def.getType(), "variable");
 			}
 		}
 		s += TCglobals.codetemplate.runtime();
+
+		if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+			TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
 
 		return s;
 	}

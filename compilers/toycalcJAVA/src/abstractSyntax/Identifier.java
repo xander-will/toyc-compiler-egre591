@@ -41,7 +41,12 @@ public class Identifier implements Expression {
     }
 
     public String generateCode() {
-        return generateLoad();
+        String s = generateLoad();
+
+        if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+            TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
+
+        return s;
     }
 
     public String getName() {

@@ -5,7 +5,10 @@ import java.util.List;
 import abstractSyntax.Statement;
 import compilers.CodeTemplate;
 import globals.TCglobals;
+import output.TCoutput;
 import abstractSyntax.PrettyPrint;
+
+import output.TCoutput;
 
 public class WriteStatement implements Statement {
 
@@ -35,6 +38,10 @@ public class WriteStatement implements Statement {
 			else
 				s += TCglobals.codetemplate.write("string");
 		}
+
+		if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+			TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
+
 		return s;
 	}
 

@@ -3,6 +3,7 @@ package abstractSyntax;
 import abstractSyntax.Expression;
 
 import globals.TCglobals;
+import output.TCoutput;
 
 public class Number implements Expression {
 
@@ -13,7 +14,13 @@ public class Number implements Expression {
     }
 
     public String generateCode() {
-        return TCglobals.codetemplate.number(this.number);
+
+        String s = TCglobals.codetemplate.number(this.number);
+
+        if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+            TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
+
+        return s;
     }
 
     public String toString() {

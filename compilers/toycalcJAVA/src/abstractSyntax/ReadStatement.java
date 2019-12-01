@@ -8,6 +8,8 @@ import globals.TCglobals;
 import abstractSyntax.Identifier;
 import abstractSyntax.PrettyPrint;
 
+import output.TCoutput;
+
 public class ReadStatement implements Statement {
 
 	private List<Identifier> ids;
@@ -33,6 +35,10 @@ public class ReadStatement implements Statement {
 			s += TCglobals.codetemplate.read();
 			s += i.generateStore();
 		}
+
+		if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+			TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
+
 		return s;
 	}
 }

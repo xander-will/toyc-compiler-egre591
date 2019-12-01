@@ -3,6 +3,7 @@ package abstractSyntax;
 import abstractSyntax.Expression;
 
 import globals.TCglobals;
+import output.TCoutput;
 
 public class Minus implements Expression {
 

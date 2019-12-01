@@ -18,7 +18,7 @@ public class TCglobals {
     public static CodeTemplate codetemplate = null;
     public static TargetCode objectcode = null;
 
-    public final static String COMPILER = "toycalc";
+    public final static String COMPILER = "toyC";
     public final static String VERSION = "v1.2";
     public final static String AUTHOR = "Samuel Coppedge / Xander Will --- Provided by Dan Resler";
 

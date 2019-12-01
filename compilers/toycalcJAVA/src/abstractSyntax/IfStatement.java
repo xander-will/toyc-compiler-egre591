@@ -3,6 +3,7 @@ package abstractSyntax;
 import abstractSyntax.Statement;
 import globals.TCglobals;
 import abstractSyntax.PrettyPrint;
+import output.TCoutput;
 
 public class IfStatement implements Statement {
 
@@ -36,9 +37,16 @@ public class IfStatement implements Statement {
 	}
 
 	public String generateCode() {
+		String s = "";
+
 		if (els != null)
-			return TCglobals.codetemplate.conditional(condition.generateCode(), ifs.generateCode(), els.generateCode());
+			s += TCglobals.codetemplate.conditional(condition.generateCode(), ifs.generateCode(), els.generateCode());
 		else
-			return TCglobals.codetemplate.conditional(condition.generateCode(), ifs.generateCode(), null);
+			s += TCglobals.codetemplate.conditional(condition.generateCode(), ifs.generateCode(), null);
+
+		if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+			TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
+
+		return s;
 	}
 }

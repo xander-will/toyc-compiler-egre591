@@ -9,6 +9,7 @@ import abstractSyntax.Identifier;
 import abstractSyntax.PrettyPrint;
 
 import globals.TCglobals;
+import output.TCoutput;
 
 public class SimpleExpression implements Expression {
 
@@ -32,6 +33,9 @@ public class SimpleExpression implements Expression {
 			s += expr_list.get(i).generateCode();
 			s += op_list.get(i - 1).generateCode();
 		}
+
+		if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+			TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
 
 		return s;
 	}

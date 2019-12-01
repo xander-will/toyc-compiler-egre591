@@ -8,6 +8,8 @@ import compilers.SymbolTable;
 import compilers.TargetCode;
 import compilers.CompilationErrorException;
 
+import output.TCoutput;
+
 public class TCoutput {
 
     public static void reportDEBUG(String prefix, String type, String message) {
@@ -51,6 +53,22 @@ public class TCoutput {
 
     public static void dumpCode(TargetCode code) {
         System.err.println("TARGET CODE:\n" + code);
+    }
+
+    public static void printHelpMessage() {
+        System.err.println("options:");
+        System.err.println("\t-help:                  display a usage message");
+        System.err.println("\t-debug <level>          display messages that aid in tracing the compilation process");
+        System.err.println("\t\tLevel:");
+        System.err.println("\t\t\t\t0 - All messages");
+        System.err.println("\t\t\t\t1 - Scanner messages only");
+        System.err.println("\t\t\t\t2 - Parser messages only");
+        System.err.println("\t\t\t\t3 - Code generation messages only");
+        System.err.println("\t-abstract               dump the abstract symbol tree");
+        System.err.println("\t-symbol                 dump the symbol table(s)");
+        System.err.println("\t-code                   dump the generated code");
+        System.err.println("\t-verbose or -v          display all information");
+        System.err.println("\t-version                display the program version\n");
     }
 
     private static String pad(int n) {

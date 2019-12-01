@@ -26,8 +26,6 @@ import globals.TCglobals;
 import output.TCoutput;
 import symTable.TCsymTable;
 import codeGen.JVM.JVMCodeTemplate;
-//import codegen.JVM.JVMcodeGenerator;
-//import codegen.JVM.JVMtargetCode;
 
 public class tc {
 
@@ -120,21 +118,29 @@ public class tc {
                     int index = argsList.indexOf("-debug");
                     if (argsList.size() >= index + 1) {
                         String debug = argsList.get(index + 1);
-                        TCglobals.debug = Byte.parseByte(debug);
+                        if (Byte.parseByte(debug) > 3 || Byte.parseByte(debug) < 0) {
+                            TCoutput.printHelpMessage();
+                            throw new Exception();
+                        } else
+                            TCglobals.debug = Byte.parseByte(debug);
                     }
                 }
                 if (argsList.contains("-help")) {
-                    printHelpMessage();
+                    TCoutput.printHelpMessage();
                 }
                 if (argsList.contains("-output")) {
                     int index = argsList.indexOf("-output");
                     if (argsList.size() >= index + 1) {
-                        TCglobals.targetFileName = argsList.get(index + 1) + "." + TCglobals.ASM_FILE_EXTENSION;
+                        String outputName = argsList.get(index + 1);
+                        TCglobals.targetFileName = outputName + "." + TCglobals.ASM_FILE_EXTENSION;
+                        // TCglobals.outputClassFileName = TCglobals.inputFileName;
                     }
                 }
                 if (!argsList.contains("-output")) {
-                    TCglobals.outputClassFileName = getProgramName(TCglobals.inputFileName);
-                    TCglobals.targetFileName = TCglobals.outputClassFileName + "." + TCglobals.ASM_FILE_EXTENSION;
+                    if (!argsList.contains("-class"))
+                        TCglobals.outputClassFileName = getProgramName(TCglobals.inputFileName);
+                    TCglobals.targetFileName = getProgramName(TCglobals.inputFileName) + "."
+                            + TCglobals.ASM_FILE_EXTENSION;
                 }
                 if (argsList.contains("-symbol")) {
                     TCglobals.symDump = true;
@@ -149,24 +155,8 @@ public class tc {
             }
 
         } catch (Exception e) {
-            System.err.println("toycalc compiler command line problem!");
+            System.err.println("toyC compiler command line problem!");
         }
-    }
-
-    private static void printHelpMessage() {
-
-        // put this in TC output
-        System.out.println("options:");
-        System.out.println("\t-help:                  display a usage message");
-        System.out.println("\t-debug <level>          display messages that aid in tracing the compilation process");
-        System.out.println("\t\tLeveL:");
-        System.out.println("\t\t\t\t0 - All messages");
-        System.out.println("\t\t\t\t1 - Scanner messages only");
-        System.out.println("\t\t\t\t2 - Parser messages only");
-        System.out.println("\t-abstract               dump the abstract symbol tree");
-        System.out.println("\t-symbol                 dump the symbol table(s)");
-        System.out.println("\t-verbose or -v          display all information");
-        System.out.println("\t-version                display the program version\n");
     }
 
     private static String getProgramName(String s) {

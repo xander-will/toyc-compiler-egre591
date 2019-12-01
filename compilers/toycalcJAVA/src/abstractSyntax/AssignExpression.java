@@ -8,6 +8,8 @@ import abstractSyntax.PrettyPrint;
 
 import globals.TCglobals;
 
+import output.TCoutput;
+
 public class AssignExpression implements Expression {
 
 	private Operator operator;
@@ -30,9 +32,9 @@ public class AssignExpression implements Expression {
 		String rval, lval;
 
 		checkLeft();
-		lval = ((Identifier)left).generateStore();
+		lval = ((Identifier) left).generateStore();
 		if (right instanceof AssignExpression)
-			rval = ((AssignExpression)right).generateMultiAssign();
+			rval = ((AssignExpression) right).generateMultiAssign();
 		else
 			rval = right.generateCode();
 
@@ -43,9 +45,9 @@ public class AssignExpression implements Expression {
 		String rval, lval;
 
 		checkLeft();
-		lval = ((Identifier)left).generateStore();
+		lval = ((Identifier) left).generateStore();
 		if (right instanceof AssignExpression)
-			rval = ((AssignExpression)right).generateMultiAssign();
+			rval = ((AssignExpression) right).generateMultiAssign();
 		else
 			rval = right.generateCode();
 

@@ -6,6 +6,7 @@ import abstractSyntax.Definition;
 import abstractSyntax.PrettyPrint;
 
 import globals.TCglobals;
+import output.TCoutput;
 
 public class FunctionDefinition extends Definition {
 
@@ -40,15 +41,24 @@ public class FunctionDefinition extends Definition {
 	}
 
 	public String generateCode() {
+		String s = "";
+
 		for (VariableDefinition ve : fd)
 			TCglobals.localsymtable.add(ve.getName(), ve.getType(), "variable");
 		String body = st.generateCode();
 
 		String name = id.getName();
-		if (name.equals("main"))
-			return TCglobals.codetemplate.main(body, var_num);
+		if (name.equals("main")) {
+			s += TCglobals.codetemplate.main(body, var_num);
+			if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+				TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
+			return s;
+		}
 
-		return TCglobals.codetemplate.function(name, getNumArgs(), body, var_num);
+		s += TCglobals.codetemplate.function(name, getNumArgs(), body, var_num);
+		if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+			TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
+		return s;
 	}
 
 	public String toString() {

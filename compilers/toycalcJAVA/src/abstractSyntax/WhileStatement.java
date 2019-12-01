@@ -4,6 +4,8 @@ import abstractSyntax.Statement;
 import globals.TCglobals;
 import abstractSyntax.PrettyPrint;
 
+import output.TCoutput;
+
 public class WhileStatement implements Statement {
 
 	private Expression condition;
@@ -21,6 +23,9 @@ public class WhileStatement implements Statement {
 		s += PrettyPrint.spaces() + "statement = " + statement.toString();
 		PrettyPrint.outdent();
 		s += PrettyPrint.spaces() + ")\n";
+
+		if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+			TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
 
 		return s;
 	}

@@ -4,6 +4,7 @@ import abstractSyntax.Statement;
 import abstractSyntax.PrettyPrint;
 
 import globals.TCglobals;
+import output.TCoutput;
 
 public class ReturnStatement implements Statement {
 
@@ -16,6 +17,10 @@ public class ReturnStatement implements Statement {
     public String generateCode() {
         String s = expression.generateCode();
         s += TCglobals.codetemplate.ret();
+
+        if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+            TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
+
         return s;
     }
 

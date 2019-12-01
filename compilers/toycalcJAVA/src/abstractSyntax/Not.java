@@ -3,6 +3,7 @@ package abstractSyntax;
 import abstractSyntax.Expression;
 
 import globals.TCglobals;
+import output.TCoutput;
 
 public class Not implements Expression {
 
@@ -18,6 +19,11 @@ public class Not implements Expression {
 
     public String generateCode() {
         String s = expression.generateCode();
+
+        if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
+            TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN",
+                    "\n" + s + TCglobals.codetemplate.operator("!"));
+
         return s + TCglobals.codetemplate.operator("!");
     }
 

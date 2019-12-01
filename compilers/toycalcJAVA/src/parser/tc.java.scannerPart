@@ -46,7 +46,7 @@ public class tc {
         default: printUsageMessage();
         }
         TCglobals.outputClassFileName = getProgramName(TCglobals.inputFileName);
-        TCglobals.targetFileName = TCglobals.outputClassFileName+"."+TCglobals.ASM_FILE_EXTENSION;;
+        TCglobals.targetFileName = TCglobals.outputClassFileName+"."+TCglobals.ASM_FILE_EXTENSION;
    }
 
     private static String getProgramName(String s) {
