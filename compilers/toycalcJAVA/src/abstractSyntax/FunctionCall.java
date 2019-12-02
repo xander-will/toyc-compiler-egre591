@@ -40,6 +40,8 @@ public class FunctionCall implements Expression {
 		String s = "";
 		if (!TCglobals.symtable.containsID(id.getName()))
 			TCoutput.reportSEMANTIC_ERROR("", id.getName() + " has not been declared");
+		if (TCglobals.symtable.get(id.getName()).getArgNum() != ap.size())
+			TCoutput.reportSEMANTIC_ERROR("", id.getName() + " called with the wrong number of args");
 
 		String args = "";
 		for (Expression e : ap)

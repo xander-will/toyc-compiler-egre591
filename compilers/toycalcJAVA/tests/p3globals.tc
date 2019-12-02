@@ -1,12 +1,24 @@
 int x;
 int y;
 
+int test(int l) {
+	char testchar;
+	write("epic!");
+	
+	testchar = 'f';
+	
+	return testchar;
+}
+
 int main() {
 	int z;
+	int x;
+	
+	char q;
 	
 	z = 5;
-	x = z;
-	
+	x = 0;
+
 	write(x);
 	newline;
 	write(y);

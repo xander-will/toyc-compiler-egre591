@@ -1,6 +1,7 @@
 package symTable;
 
 import compilers.SymbolTable;
+import output.TCoutput;
 
 import symTable.Attributes;
 
@@ -19,11 +20,19 @@ public class TCsymTable implements SymbolTable {
     }
 
     public void add(String name, String data_type, String sem_type) {
-        this.st.put(name, new Attributes(data_type, sem_type, next_entry_id++));
+        if (!containsID(name))
+            this.st.put(name, new Attributes(data_type, sem_type, next_entry_id++));
+        else {
+            TCoutput.reportSEMANTIC_ERROR("", "Variable " + name + " has already been defined in this scope");
+        }
     }
 
     public void add(String name, String data_type, String sem_type, int arg_num) {
-        this.st.put(name, new Attributes(data_type, sem_type, next_entry_id++, arg_num));
+        if (!containsID(name))
+            this.st.put(name, new Attributes(data_type, sem_type, next_entry_id++, arg_num));
+        else {
+            TCoutput.reportSEMANTIC_ERROR("[SYMTABLE]", "Variable " + name + " has already been defined in this scope");
+        }
     }
 
     public boolean containsID(String id) {

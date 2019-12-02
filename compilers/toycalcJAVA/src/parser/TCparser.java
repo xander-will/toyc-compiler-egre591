@@ -171,6 +171,7 @@ public class TCparser implements Parser {
 		var_num++;
 
 		if (buff.getTokenType().equals(TCtoken.Tokens.COMMA)) {
+			accept(TCtoken.Tokens.COMMA);
 			exitingDEBUG("formalParamList");
 			return formalParamList(paramlist);
 		} else {
@@ -457,7 +458,7 @@ public class TCparser implements Parser {
 		case STRING:
 			exitingDEBUG("primary");
 			return new StringLiteral(sw.getLexeme());
-		case CHAR:
+		case CHARLITERAL:
 			exitingDEBUG("primary");
 			return new CharLiteral(sw.getLexeme());
 		case LPAREN:

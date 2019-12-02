@@ -22,7 +22,7 @@ public class Program implements AbstractSyntax {
 	}
 
 	public void checkReturns() {
-		System.err.println("program");
+		// System.err.println("program");
 		for (Definition def : dl)
 			if (def instanceof FunctionDefinition)
 				if (!((FunctionDefinition)def).checkReturns())
@@ -37,12 +37,19 @@ public class Program implements AbstractSyntax {
 
 		for (Definition def : dl) {
 			if (def instanceof FunctionDefinition) {
-				TCglobals.symtable.add(def.getName(), def.getType(), "function",
-						((FunctionDefinition) def).getNumArgs());
-				TCglobals.localsymtable = TCglobals.symtable.get(def.getName()).getSymtable();
-				t += def.generateCode() + "\n";
+				if (def.getType().equals("char"))
+					TCoutput.reportSEMANTIC_ERROR("", "Variable " + def.getName() + " can only be type int, not char");
+				else {
+					TCglobals.symtable.add(def.getName(), def.getType(), "function",
+							((FunctionDefinition) def).getNumArgs());
+					TCglobals.localsymtable = TCglobals.symtable.get(def.getName()).getSymtable();
+					t += def.generateCode() + "\n";
+				}
 			} else {
-				TCglobals.symtable.add(def.getName(), def.getType(), "variable");
+				if (def.getType().equals("char"))
+					TCoutput.reportSEMANTIC_ERROR("", "Variable " + def.getName() + " can only be type int, not char");
+				else
+					TCglobals.symtable.add(def.getName(), def.getType(), "variable");
 			}
 		}
 

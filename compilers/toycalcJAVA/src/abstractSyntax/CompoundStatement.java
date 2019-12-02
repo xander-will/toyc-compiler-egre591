@@ -9,6 +9,7 @@ import abstractSyntax.ReturnStatement;
 import abstractSyntax.IfStatement;
 import abstractSyntax.WhileStatement;
 import globals.TCglobals;
+import output.TCoutput;
 
 public class CompoundStatement implements Statement {
 
@@ -23,9 +24,9 @@ public class CompoundStatement implements Statement {
 	public boolean checkReturns() {
 		Statement s;
 		ListIterator<Statement> itr = statementList.listIterator(statementList.size());
-		System.err.println("cs");
+		// System.err.println("cs");
 		while (itr.hasPrevious()) {
-			System.err.println("in loop");
+			// System.err.println("in loop");
 			s = itr.previous();
 			if (s instanceof ReturnStatement)
 				return true;
@@ -44,7 +45,10 @@ public class CompoundStatement implements Statement {
 
 	public String generateCode() {
 		for (VariableDefinition vd : definitionList) {
-			TCglobals.localsymtable.add(vd.getName(), vd.getType(), "variable");
+			if (vd.getType().equals("char"))
+				TCoutput.reportSEMANTIC_ERROR("", "Variable " + vd.getName() + " can only be type int, not char");
+			else
+				TCglobals.localsymtable.add(vd.getName(), vd.getType(), "variable");
 		}
 		String s = "";
 		for (Statement st : statementList) {
