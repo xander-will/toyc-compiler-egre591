@@ -4,7 +4,7 @@ import java.util.List;
 
 import abstractSyntax.Expression;
 import abstractSyntax.PrettyPrint;
-import abstractSyntax.AssignStatement;
+import abstractSyntax.AssignExpression;;
 
 import output.TCoutput;
 import globals.TCglobals;
@@ -46,8 +46,8 @@ public class FunctionCall implements Expression {
 
 		String args = "";
 		for (Expression e : ap) {
-			if (e instanceof AssignStatement)
-				args += ((AssignStatement)e).generateMultiAssign();
+			if (e instanceof AssignExpression)
+				args += ((AssignExpression) e).generateMultiAssign();
 			else
 				args += e.generateCode();
 		}

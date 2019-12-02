@@ -7,10 +7,9 @@ import output.TCoutput;
 import abstractSyntax.Expression;
 import abstractSyntax.Identifier;
 import abstractSyntax.PrettyPrint;
-import abstractSyntax.AssignStatement;
+import abstractSyntax.AssignExpression;;
 
 import globals.TCglobals;
-import output.TCoutput;
 
 public class SimpleExpression implements Expression {
 
@@ -31,8 +30,8 @@ public class SimpleExpression implements Expression {
 		s += op_list.get(0).generateCode();
 
 		for (int i = 2; i < expr_list.size(); i++) {
-			if (expr_list.get(i) instanceof AssignStatement)
-				s += ((AssignStatement)expr_list.get(i)).generateMultiAssign();
+			if (expr_list.get(i) instanceof AssignExpression)
+				s += ((AssignExpression) expr_list.get(i)).generateMultiAssign();
 			else
 				s += expr_list.get(i).generateCode();
 			s += op_list.get(i - 1).generateCode();

@@ -15,7 +15,8 @@ int srand(int seed) {
 	return 0;
 }
 int rand() {
-	int x = rand_seed;
+	int x;
+	x = rand_seed;
 	rand_seed = x * 2 + 4 - x / 3 + 50;
 	
 	return x * 4 + 7 - x / 2 + 20;
@@ -177,8 +178,8 @@ int Game() {
 	turn = 1; // player starts
 	
 	while(!CheckAll()) {
-		ReportPlayer(turn); write("'s turn"); newline;
 		DrawBoard();
+		ReportPlayer(turn); write("'s turn"); newline;
 		
 		if (turn == 1) {
 			while (CheckTile(move = GetMove())) {

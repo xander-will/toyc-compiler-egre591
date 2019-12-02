@@ -89,7 +89,7 @@ public class TCscanner implements Lexer {
         while (Character.isWhitespace(charBuff))
             charBuff = getChar();
 
-        if (Character.isLetter(charBuff))
+        if (Character.isLetter(charBuff) || charBuff == '_')
             return StateID(); // keyword or id state
 
         if (charBuff == EOFCHAR)
@@ -131,7 +131,7 @@ public class TCscanner implements Lexer {
     private Token StateID() { // keyword or ID state
         refresh();
 
-        while (Character.isLetterOrDigit(charBuff))
+        while (Character.isLetterOrDigit(charBuff) || charBuff == '_')
             refresh();
 
         if (TCtoken.keywords.containsKey(lexeme)) // keyword
