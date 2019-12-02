@@ -23,7 +23,7 @@ public class TCsymTable implements SymbolTable {
         if (!containsID(name))
             this.st.put(name, new Attributes(data_type, sem_type, next_entry_id++));
         else {
-            TCoutput.reportSEMANTIC_ERROR("", "Variable " + name + " has already been defined in this scope");
+            TCoutput.reportSEMANTIC_ERROR("", data_type + " " + name + " has already been defined in this scope");
         }
     }
 
@@ -31,7 +31,7 @@ public class TCsymTable implements SymbolTable {
         if (!containsID(name))
             this.st.put(name, new Attributes(data_type, sem_type, next_entry_id++, arg_num));
         else {
-            TCoutput.reportSEMANTIC_ERROR("[SYMTABLE]", "Variable " + name + " has already been defined in this scope");
+            TCoutput.reportSEMANTIC_ERROR("[SYMTABLE]", data_type + " " + name + " has already been defined in this scope");
         }
     }
 

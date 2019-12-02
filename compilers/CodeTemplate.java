@@ -44,5 +44,7 @@ public interface CodeTemplate {
 
     public String stringLit(String s);
 
+    public String throwaway();
+
     public String write(String type);
 }

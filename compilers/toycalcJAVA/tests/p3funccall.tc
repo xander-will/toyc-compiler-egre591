@@ -1,0 +1,14 @@
+int hello() {
+	write("Hello!!");
+	return 0;
+}
+
+int main() {
+	int x;
+	x = 5;
+	
+	while (x = x - 1)
+		hello();
+	
+	return 0;
+}

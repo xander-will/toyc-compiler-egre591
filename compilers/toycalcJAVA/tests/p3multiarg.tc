@@ -1,0 +1,12 @@
+int x;
+
+int func(int x, int y) {
+	return x + y;
+}
+
+int main() {
+	func(1 + 2);
+	x = 2;
+	y = 'd';
+	return 0;
+}

@@ -4,6 +4,7 @@ import java.util.List;
 
 import abstractSyntax.Expression;
 import abstractSyntax.PrettyPrint;
+import abstractSyntax.AssignStatement;
 
 import output.TCoutput;
 import globals.TCglobals;
@@ -44,8 +45,12 @@ public class FunctionCall implements Expression {
 			TCoutput.reportSEMANTIC_ERROR("", id.getName() + " called with the wrong number of args");
 
 		String args = "";
-		for (Expression e : ap)
-			args += e.generateCode();
+		for (Expression e : ap) {
+			if (e instanceof AssignStatement)
+				args += ((AssignStatement)e).generateMultiAssign();
+			else
+				args += e.generateCode();
+		}
 
 		s = TCglobals.codetemplate.call(id.getName(), args);
 

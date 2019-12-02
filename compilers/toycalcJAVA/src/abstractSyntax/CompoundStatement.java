@@ -24,9 +24,7 @@ public class CompoundStatement implements Statement {
 	public boolean checkReturns() {
 		Statement s;
 		ListIterator<Statement> itr = statementList.listIterator(statementList.size());
-		// System.err.println("cs");
 		while (itr.hasPrevious()) {
-			// System.err.println("in loop");
 			s = itr.previous();
 			if (s instanceof ReturnStatement)
 				return true;

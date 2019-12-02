@@ -426,7 +426,7 @@ public class TCparser implements Parser {
 			expr.add(left);
 			while (buff.getTokenType().equals(TCtoken.Tokens.MULOP)) {
 				op.add(operator(TCtoken.Tokens.MULOP));
-				expr.add(term());
+				expr.add(primary());
 			}
 			exitingDEBUG("term");
 			return new SimpleExpression(op, expr);
@@ -484,9 +484,12 @@ public class TCparser implements Parser {
 	}
 
 	private List<Expression> functionCall() {
+		List<Expression> ap = new ArrayList<Expression>();
+
 		enteringDEBUG("functionCall");
 		accept(TCtoken.Tokens.LPAREN);
-		List<Expression> ap = actualParameters(new ArrayList<Expression>());
+		if (!buff.getTokenType().equals(TCtoken.Tokens.RPAREN))
+			ap = actualParameters(ap);
 		accept(TCtoken.Tokens.RPAREN);
 		exitingDEBUG("functionCall");
 		return ap;

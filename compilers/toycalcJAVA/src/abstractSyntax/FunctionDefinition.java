@@ -41,7 +41,6 @@ public class FunctionDefinition extends Definition {
 	}
 
 	public boolean checkReturns() {
-		// System.err.println("fd");
 		return ((CompoundStatement)st).checkReturns();
 	}
 

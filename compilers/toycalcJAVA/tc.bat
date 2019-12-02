@@ -1,1 +1,1 @@
-ant -Dsource="%1" -Dflags="-v -abstract" test
+ant -Dsource="%1" -Dflags="-v" test

@@ -27,7 +27,8 @@ public class IfStatement implements Statement {
 	}
 
 	public boolean checkReturns() {
-		if (ifs instanceof IfStatement) {
+		// I think this is not needed... - x
+		/*if (ifs instanceof IfStatement) {
 			if (!((IfStatement)ifs).checkReturns())
 				return false;
 		}
@@ -36,10 +37,9 @@ public class IfStatement implements Statement {
 				return false;
 		}
 		else if (!(ifs instanceof ReturnStatement))
-			return false;
+			return false;*/
 
 		if (els != null) {
-			System.err.println(els.getClass().getSimpleName());
 			if (els instanceof IfStatement) {
 				if (((IfStatement)els).checkReturns())
 					return true;

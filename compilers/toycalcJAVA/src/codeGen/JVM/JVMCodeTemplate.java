@@ -197,9 +197,9 @@ public class JVMCodeTemplate implements CodeTemplate {
         op_table.put("!", not);
         op_table.put("||", header + "toyCOr(II)I");
         op_table.put("&&", header + "toyCAnd(II)I");
-        op_table.put("<=", header + "toyCGreaterThan(II)I\n" + not); // not greater than
-        op_table.put(">=", header + "toyCLessThan(II)I\n" + not); // not less than
-        op_table.put("!=", header + "toyCEquals(II)I\n" + not);
+        op_table.put("<=", header + "toyCGreaterThan(II)I\n\t" + not); // not greater than
+        op_table.put(">=", header + "toyCLessThan(II)I\n\t" + not); // not less than
+        op_table.put("!=", header + "toyCEquals(II)I\n\t" + not);
     }
 
     public String operator(String op) {
@@ -233,6 +233,10 @@ public class JVMCodeTemplate implements CodeTemplate {
 
     public String stringLit(String s) {
         return "\tldc " + s + "\n";
+    }
+
+    public String throwaway() {
+        return "\tpop\n";
     }
 
     public String write(String type) {
