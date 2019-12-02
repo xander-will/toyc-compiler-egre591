@@ -76,6 +76,10 @@ public class Attributes implements AttributesInterface {
         return arg_num;
     }
 
+    public SemanticType getSemanticType() {
+        return this.st;
+    }
+
     public String toString() {
         if (this.st != SemanticType.FUNCTION) {
             return "(" + id.toString() + ", " + this.st.toString() + ", " + this.dt.toString() + ")";

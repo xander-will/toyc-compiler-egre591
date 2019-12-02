@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
 import java.util.regex.*;
+import java.util.ArrayList;
 
 import compilers.CodeTemplate;
 
@@ -100,17 +101,18 @@ public class JVMCodeTemplate implements CodeTemplate {
     }
 
     public String globalload(String name) {
-        return "\tgetstatic " + TCglobals.outputClassFileName + "/" + name + "I\n";
+        return "\tgetstatic " + TCglobals.outputClassFileName + "/" + name + " I\n";
     }
 
     public String globalstore(String name) {
-        return "\tputstatic " + TCglobals.outputClassFileName + "/" + name + "I\n";
+        return "\tputstatic " + TCglobals.outputClassFileName + "/" + name + " I\n";
     }
 
     public String init() {
         String s = directive("source", TCglobals.inputFileName);
         s += directive("class", "public " + TCglobals.outputClassFileName);
         s += directive("super", "java/lang/Object") + "\n";
+        s += initglobals();
         s += ".method public <init>()V\n";
         s += functionHeader(1, 1);
         s += "\taload_0\n";
@@ -122,8 +124,13 @@ public class JVMCodeTemplate implements CodeTemplate {
 
     public String initglobals() {
         String s = "";
-        // add code to create fields for each global variable using this format:
-        // .field private static <field-name> I = 0
+        ArrayList<String> globals = TCglobals.symtable.getGlobals();
+
+        for (String str : globals) {
+            s += ".field private static " + str + " I = 0\n";
+        }
+
+        return s + "\n";
     }
 
     public String load(Integer id) {

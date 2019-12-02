@@ -5,6 +5,8 @@ import compilers.SymbolTable;
 import symTable.Attributes;
 
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TCsymTable implements SymbolTable {
 
@@ -32,8 +34,21 @@ public class TCsymTable implements SymbolTable {
         return this.st.get(id);
     }
 
-    public String[] getGlobals() {
+    public ArrayList<String> getGlobals() {
         // put code to scrape names of all global variables and return them
+        ArrayList<String> globals = new ArrayList<String>();
+        
+        for (String s : this.st.keySet()) {
+
+            if (st.get(s).getSemanticType().toString().equals("VARIABLE")) {
+                globals.add(s);
+            }
+            else if (st.get(s).getSemanticType().equals("FUNCTION")) {
+                break;
+            }
+        }
+
+        return globals;
     }
 
     public void print() {

@@ -34,7 +34,7 @@ public class Identifier implements Expression {
     public String generateLoad() {
         int id = getID();
         if (id == GLOBAL)
-            return TCglobals.codetemplate.globalload(name)
+            return TCglobals.codetemplate.globalload(name);
         else
             return TCglobals.codetemplate.load(id);
     }
@@ -42,7 +42,7 @@ public class Identifier implements Expression {
     public String generateStore() {
         int id = getID();
         if (id == GLOBAL)
-            return TCglobals.codetemplate.globalstore(name)
+            return TCglobals.codetemplate.globalstore(name);
         else
             return TCglobals.codetemplate.store(id);
     }

@@ -1,0 +1,15 @@
+int x;
+int y;
+
+int main() {
+	int z;
+	
+	z = 5;
+	x = z;
+	
+	write(x);
+	newline;
+	write(y);
+	
+	return 0;
+}

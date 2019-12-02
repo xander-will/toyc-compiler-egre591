@@ -32,8 +32,8 @@ public class Program implements AbstractSyntax {
 
 	public String generateCode() {
 		CodeTemplate ct = TCglobals.codetemplate;
-		String s = ct.init() + "\n";
-		String t = "";
+		String init, t, s;
+		init = t = s = "";
 
 		for (Definition def : dl) {
 			if (def instanceof FunctionDefinition) {
@@ -45,8 +45,10 @@ public class Program implements AbstractSyntax {
 				TCglobals.symtable.add(def.getName(), def.getType(), "variable");
 			}
 		}
-		s += TCglobals.codetemplate.initglobals() + t;
-		s += TCglobals.codetemplate.runtime();
+
+		init = ct.init() + "\n";
+		
+		s += init + t + TCglobals.codetemplate.runtime();
 
 		if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)
 			TCoutput.reportDEBUG(this.getClass().getSimpleName(), "CODEGEN", "\n" + s);
