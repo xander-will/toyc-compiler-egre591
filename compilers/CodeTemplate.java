@@ -14,7 +14,13 @@ public interface CodeTemplate {
 
     public String function(String name, int arg_num, String body, int var_num);
 
+    public String globalload(String name);
+
+    public String globalstore(String name);
+
     public String init();
+
+    public String initglobals();
 
     public String load(Integer id);
 

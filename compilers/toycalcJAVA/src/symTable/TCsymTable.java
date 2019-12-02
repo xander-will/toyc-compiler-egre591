@@ -32,6 +32,10 @@ public class TCsymTable implements SymbolTable {
         return this.st.get(id);
     }
 
+    public String[] getGlobals() {
+        // put code to scrape names of all global variables and return them
+    }
+
     public void print() {
         System.out.println(toString());
     }

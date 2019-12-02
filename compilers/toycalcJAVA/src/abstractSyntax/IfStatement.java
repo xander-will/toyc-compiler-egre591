@@ -1,6 +1,9 @@
 package abstractSyntax;
 
 import abstractSyntax.Statement;
+import abstractSyntax.ReturnStatement;
+import abstractSyntax.CompoundStatement;
+import abstractSyntax.WhileStatement;
 import globals.TCglobals;
 import abstractSyntax.PrettyPrint;
 import output.TCoutput;
@@ -21,6 +24,36 @@ public class IfStatement implements Statement {
 		this.condition = condition;
 		this.ifs = ifs;
 		this.els = els;
+	}
+
+	public boolean checkReturns() {
+		if (ifs instanceof IfStatement) {
+			if (!((IfStatement)ifs).checkReturns())
+				return false;
+		}
+		else if (ifs instanceof CompoundStatement) {
+			if (!((CompoundStatement)ifs).checkReturns())
+				return false;
+		}
+		else if (!(ifs instanceof ReturnStatement))
+			return false;
+
+		if (els != null) {
+			System.err.println(els.getClass().getSimpleName());
+			if (els instanceof IfStatement) {
+				if (((IfStatement)els).checkReturns())
+					return true;
+			}
+			else if (els instanceof CompoundStatement) {
+				if (((CompoundStatement)els).checkReturns())
+					return true;
+			}
+			else if (els instanceof ReturnStatement) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public String toString() {

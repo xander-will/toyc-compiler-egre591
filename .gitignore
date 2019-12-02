@@ -1,0 +1,4 @@
+*.class
+*.j
+
+build/*

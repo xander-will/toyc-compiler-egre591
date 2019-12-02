@@ -1,6 +1,9 @@
 package abstractSyntax;
 
 import abstractSyntax.Statement;
+import abstractSyntax.ReturnStatement;
+import abstractSyntax.CompoundStatement;
+import abstractSyntax.IfStatement;
 import globals.TCglobals;
 import abstractSyntax.PrettyPrint;
 
@@ -14,6 +17,22 @@ public class WhileStatement implements Statement {
 	public WhileStatement(Expression condition, Statement s) {
 		this.condition = condition;
 		this.statement = s;
+	}
+
+	public boolean checkReturns() {
+		if (statement instanceof ReturnStatement)
+				return true;
+		else if (statement instanceof IfStatement)
+			if (((IfStatement)statement).checkReturns())
+				return true;
+		else if (statement instanceof WhileStatement)
+			if (((WhileStatement)statement).checkReturns())
+				return true;
+		else if (statement instanceof CompoundStatement)
+			if (((CompoundStatement)statement).checkReturns())
+				return true; 
+			
+		return false;
 	}
 
 	public String toString() {

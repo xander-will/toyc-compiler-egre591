@@ -1,0 +1,7 @@
+int x;
+
+int main() {
+	while (x)
+		x = 2;
+		return 0;
+}

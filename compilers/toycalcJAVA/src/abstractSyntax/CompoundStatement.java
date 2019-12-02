@@ -1,9 +1,13 @@
 package abstractSyntax;
 
 import java.util.List;
+import java.util.ListIterator;
 
 import abstractSyntax.Statement;
 import abstractSyntax.PrettyPrint;
+import abstractSyntax.ReturnStatement;
+import abstractSyntax.IfStatement;
+import abstractSyntax.WhileStatement;
 import globals.TCglobals;
 
 public class CompoundStatement implements Statement {
@@ -14,6 +18,28 @@ public class CompoundStatement implements Statement {
 	public CompoundStatement(List<VariableDefinition> dl, List<Statement> sl) {
 		this.definitionList = dl;
 		this.statementList = sl;
+	}
+
+	public boolean checkReturns() {
+		Statement s;
+		ListIterator<Statement> itr = statementList.listIterator(statementList.size());
+		System.err.println("cs");
+		while (itr.hasPrevious()) {
+			System.err.println("in loop");
+			s = itr.previous();
+			if (s instanceof ReturnStatement)
+				return true;
+			else if (s instanceof IfStatement) {
+				if (((IfStatement)s).checkReturns())
+					return true;
+			}
+			else if (s instanceof CompoundStatement) {
+				if (((CompoundStatement)s).checkReturns())
+					return true; 
+			}
+		}
+
+		return false;
 	}
 
 	public String generateCode() {

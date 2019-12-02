@@ -22,6 +22,7 @@ import compilers.Lexer;
 import compilers.CompilationErrorException;
 import compilers.CodeGenerationException;
 
+import abstractSyntax.Program;
 import globals.TCglobals;
 import output.TCoutput;
 import symTable.TCsymTable;
@@ -39,6 +40,8 @@ public class tc {
             if (TCglobals.astDump) {
                 TCoutput.dumpAST(TCglobals.ast);
             }
+
+            ((Program)TCglobals.ast).checkReturns();
 
             TCglobals.codetemplate = new JVMCodeTemplate();
             TCglobals.symtable = new TCsymTable();

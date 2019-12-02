@@ -71,6 +71,9 @@ public class TCscanner implements Lexer {
 
     public Token getToken() {
         Token t = StateStart();
+        while (t.getTokenType().equals(TCtoken.Tokens.NONE)) {
+            t = StateStart();
+        }
 
         if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 1) {
             String prefix = lineNum + "." + pos + " ";

@@ -7,22 +7,23 @@ import output.TCoutput;
 public class Identifier implements Expression {
 
     private String name;
+    private final int GLOBAL = -1;
 
     public Identifier(String name) {
         this.name = name;
     }
 
     public int getID() {
-        int id = -1;
+        int id = GLOBAL;
         if (TCglobals.localsymtable != null) {
             try {
                 id = TCglobals.localsymtable.get(name).getID();
             } catch (Exception e) {
             }
         }
-        if (id == -1) {
+        if (id == GLOBAL) {
             try {
-                id = TCglobals.symtable.get(name).getID();
+                TCglobals.symtable.get(name);
             } catch (Exception e) {
                 TCoutput.reportSEMANTIC_ERROR("", "Call on variable " + name + " that was not initialized.");
             }
@@ -32,12 +33,18 @@ public class Identifier implements Expression {
 
     public String generateLoad() {
         int id = getID();
-        return TCglobals.codetemplate.load(id);
+        if (id == GLOBAL)
+            return TCglobals.codetemplate.globalload(name)
+        else
+            return TCglobals.codetemplate.load(id);
     }
 
     public String generateStore() {
         int id = getID();
-        return TCglobals.codetemplate.store(id);
+        if (id == GLOBAL)
+            return TCglobals.codetemplate.globalstore(name)
+        else
+            return TCglobals.codetemplate.store(id);
     }
 
     public String generateCode() {

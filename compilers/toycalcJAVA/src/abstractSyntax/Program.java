@@ -21,26 +21,31 @@ public class Program implements AbstractSyntax {
 		dl = l;
 	}
 
-	/*
-	 * Remember to add instanceof check for vardef and add generate code for vardef
-	 * Add args_len to the attribute class and set it up here
-	 * ((FunctionDefinitiondef).arglen())
-	 */
+	public void checkReturns() {
+		System.err.println("program");
+		for (Definition def : dl)
+			if (def instanceof FunctionDefinition)
+				if (!((FunctionDefinition)def).checkReturns())
+					TCoutput.reportSEMANTIC_ERROR("", "Function " + ((FunctionDefinition)def).getName() + " does not ensure a return on all possible code paths.");
+			
+	}
 
 	public String generateCode() {
 		CodeTemplate ct = TCglobals.codetemplate;
 		String s = ct.init() + "\n";
+		String t = "";
 
 		for (Definition def : dl) {
 			if (def instanceof FunctionDefinition) {
 				TCglobals.symtable.add(def.getName(), def.getType(), "function",
 						((FunctionDefinition) def).getNumArgs());
 				TCglobals.localsymtable = TCglobals.symtable.get(def.getName()).getSymtable();
-				s += def.generateCode() + "\n";
+				t += def.generateCode() + "\n";
 			} else {
 				TCglobals.symtable.add(def.getName(), def.getType(), "variable");
 			}
 		}
+		s += TCglobals.codetemplate.initglobals() + t;
 		s += TCglobals.codetemplate.runtime();
 
 		if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)

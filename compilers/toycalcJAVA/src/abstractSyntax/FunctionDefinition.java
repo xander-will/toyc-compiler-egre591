@@ -40,6 +40,11 @@ public class FunctionDefinition extends Definition {
 		return fd.size();
 	}
 
+	public boolean checkReturns() {
+		System.err.println("fd");
+		return ((CompoundStatement)st).checkReturns();
+	}
+
 	public String generateCode() {
 		String s = "";
 

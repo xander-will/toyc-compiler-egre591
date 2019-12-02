@@ -1,5 +1,7 @@
 package codeGen.JVM;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.HashMap;
 import java.util.regex.*;
 
@@ -97,6 +99,14 @@ public class JVMCodeTemplate implements CodeTemplate {
         return s;
     }
 
+    public String globalload(String name) {
+        return "\tgetstatic " + TCglobals.outputClassFileName + "/" + name + "I\n";
+    }
+
+    public String globalstore(String name) {
+        return "\tputstatic " + TCglobals.outputClassFileName + "/" + name + "I\n";
+    }
+
     public String init() {
         String s = directive("source", TCglobals.inputFileName);
         s += directive("class", "public " + TCglobals.outputClassFileName);
@@ -110,31 +120,37 @@ public class JVMCodeTemplate implements CodeTemplate {
         return s;
     }
 
+    public String initglobals() {
+        String s = "";
+        // add code to create fields for each global variable using this format:
+        // .field private static <field-name> I = 0
+    }
+
     public String load(Integer id) {
         if (0 <= id && id <= 3)
             return "\tiload_" + id.toString() + "\n";
         else
-            return "iload " + id.toString() + "\n";
+            return "\tiload " + id.toString() + "\n";
     }
 
     public String loop(String cond, String stmt) {
         String l_loop = "LOOP_" + TCglobals.labelCount.toString();
         String l_endloop = "ENDLOOP_" + TCglobals.labelCount.toString();
 
-        String s = l_loop + ":\n" + cond;
-        s += "\tifeq " + l_endloop + "\n";
-        s += stmt + "\tgoto " + l_loop + "\n";
-        s += l_endloop + ":\n";
-
-        Pattern p = Pattern.compile("\tistore(_|\\s)\\d+\n\tifeq ENDLOOP_");
-        Matcher m = p.matcher(s);
+        List cond_instrs = Arrays.asList(cond.split("\n"));
+        Pattern p = Pattern.compile("\tistore(_|\\s)\\d+");
+        Matcher m = p.matcher((String)cond_instrs.get(cond_instrs.size()-1));
 
         // Assignment in loop conditional, must re-load onto stack after storing
         if (m.find()) {
             int istore_num = Integer.parseInt(m.group(0).replaceAll("[^0-9]+", ""));
-            s = s.replaceAll("\tistore(_|\\s)" + istore_num + "\n",
-                    "\tistore " + istore_num + "\n\tiload " + istore_num + "\n");
+            cond += load(istore_num);
         }
+
+        String s = l_loop + ":\n" + cond;
+        s += "\tifeq " + l_endloop + "\n";
+        s += stmt + "\tgoto " + l_loop + "\n";
+        s += l_endloop + ":\n";
 
         TCglobals.labelCount++;
         return s;
