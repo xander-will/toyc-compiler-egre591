@@ -43,7 +43,7 @@
     -verbose or -v          display all information
     -version                display the program version
 
-### <b>Please note</b> that due to the ToyC compiler being written using Java, if the `-output` and the `-class` flags are present without one another or do not match the same string, you code will not run.
+### <b>Please note</b> that due to the ToyC compiler targeting the JVM, if the `-output` and the `-class` flags are present without one another or do not match the same string, you code will not run.
 
 <br />
 
@@ -55,6 +55,7 @@
 * #### Reading user input and Writing to the console
 * #### Global variables and local scoping
 * #### Slight code optimization
+* #### Returns with no expression following implicitly return 0 (allowing void behavior)
 
 <br />
 

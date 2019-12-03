@@ -12,7 +12,7 @@
 int rand_seed;
 int srand(int seed) {
 	rand_seed = seed;
-	return 0;
+	return;
 }
 int rand() {
 	int x;
@@ -42,25 +42,26 @@ int DrawTile(int tile) {
 		write("X");
 	else
 		write("O");
-	return 0;
+	return;
 }
 
 int DrawRow(int l, int m, int r) {
 	write(" ");
-	if (DrawTile(l)); 
+	DrawTile(l);
 	write("|"); 
-	if (DrawTile(m));
+	DrawTile(m);
 	write("|"); 
-	if (DrawTile(r));
+	DrawTile(r);
 	newline;
-	return 0;
+	return;
 }
 
 int DrawBoard() {
 	DrawRow(ul, uc, ur);
 	DrawRow(cl, cc, cr);
 	DrawRow(ll, lc, lr);
-	return 0;
+	newline;
+	return;
 }
 
 //****************
@@ -81,12 +82,10 @@ int GetMove() {
 }
 
 int CheckLine(int x, int y, int z) {
-	if (x == y) {
-		if (y == x)
-			if (y == z)
-				return x;
-	}
-	else return 0;
+	if ((x == y) && (y == z) && (x == z))
+		return z;
+	else 
+		return 0;
 }
 
 int CheckHoriz() {
@@ -139,7 +138,15 @@ int ChangeTile(int tile, int num) {
 		lc = num;
 	else if (tile == 9)
 		lr = num;
-	return 0;
+	return;
+}
+
+int Cat() {
+	if (ul && uc && ur && cl && cc
+		&& cr && ll && lc && lr) {
+		return 1;
+	}
+	else return 0;	
 }
 
 int CheckTile(int tile) {
@@ -169,7 +176,7 @@ int ReportPlayer(int id) {
 		write("PLAYER");
 	else
 		write("COMPUTER");
-	return 0;
+	return;
 }
 
 int Game() {
@@ -179,6 +186,10 @@ int Game() {
 	
 	while(!CheckAll()) {
 		DrawBoard();
+		if ( Cat() ) {
+				write("Cat!");
+				return;
+		}
 		ReportPlayer(turn); write("'s turn"); newline;
 		
 		if (turn == 1) {
@@ -202,7 +213,7 @@ int Game() {
 	else
 		write("Computer has won :(");
 	
-	return 0;
+	return;
 }
 
 int main() {
@@ -213,5 +224,5 @@ int main() {
 	
 	Game();
 	
-	return 0;
+	return;
 }

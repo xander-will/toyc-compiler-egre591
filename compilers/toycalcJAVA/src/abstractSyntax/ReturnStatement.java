@@ -15,7 +15,11 @@ public class ReturnStatement implements Statement {
     }
 
     public String generateCode() {
-        String s = expression.generateCode();
+        String s = "";
+        if (expression != null)
+            s += expression.generateCode();
+        else
+            s += TCglobals.codetemplate.number("0");
         s += TCglobals.codetemplate.ret();
 
         if (TCglobals.verbose || TCglobals.debug == 0 || TCglobals.debug == 3)

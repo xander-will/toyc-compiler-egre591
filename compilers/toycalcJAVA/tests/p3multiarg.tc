@@ -5,7 +5,7 @@ int func(int x, int y) {
 }
 
 int main() {
-	func(1 + 2);
+	func(1 + 2, 4);
 	x = 2;
 	y = 'd';
 	return 0;

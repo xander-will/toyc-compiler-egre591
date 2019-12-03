@@ -28,30 +28,32 @@ public class IfStatement implements Statement {
 
 	public boolean checkReturns() {
 		// I think this is not needed... - x
-		/*if (ifs instanceof IfStatement) {
-			if (!((IfStatement)ifs).checkReturns())
-				return false;
-		}
-		else if (ifs instanceof CompoundStatement) {
-			if (!((CompoundStatement)ifs).checkReturns())
-				return false;
-		}
-		else if (!(ifs instanceof ReturnStatement))
-			return false;*/
-
-		if (els != null) {
+		if (els == null)
+			return false;
+		else { 
 			if (els instanceof IfStatement) {
-				if (((IfStatement)els).checkReturns())
-					return true;
+				if (!((IfStatement)els).checkReturns())
+					return false;
 			}
 			else if (els instanceof CompoundStatement) {
-				if (((CompoundStatement)els).checkReturns())
-					return true;
+				if (!((CompoundStatement)els).checkReturns())
+					return false;
 			}
-			else if (els instanceof ReturnStatement) {
-				return true;
+			else if (!(els instanceof ReturnStatement)) {
+				return false;
 			}
 		}
+
+		if (ifs instanceof IfStatement) {
+			if (((IfStatement)ifs).checkReturns())
+				return true;
+		}
+		else if (ifs instanceof CompoundStatement) {
+			if (((CompoundStatement)ifs).checkReturns())
+				return true;
+		}
+		else if (ifs instanceof ReturnStatement)
+			return true;
 
 		return false;
 	}
