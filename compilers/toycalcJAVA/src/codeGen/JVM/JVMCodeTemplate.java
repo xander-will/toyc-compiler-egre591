@@ -187,6 +187,7 @@ public class JVMCodeTemplate implements CodeTemplate {
         op_table.put("-", "isub");
         op_table.put("*", "imul");
         op_table.put("/", "idiv");
+        op_table.put("%", "irem");
 
         // these call from the runtime
         String header = "invokestatic " + TCglobals.outputClassFileName + ".";

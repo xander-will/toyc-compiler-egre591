@@ -22,10 +22,6 @@ int rand() {
 	return x * 4 + 7 - x / 2 + 20;
 }
 
-int modulo(int num, int mod) {
-	return num - (mod * (num / mod));
-}
-
 //******************
 // Drawing Functions
 //******************
@@ -201,7 +197,7 @@ int Game() {
 			turn = 2;
 		}
 		else if (turn == 2) {
-			while (CheckTile(move = modulo(rand(), 9) + 1));
+			while (CheckTile(move = rand() % 9 + 1));
 			ChangeTile(move, 2);
 			turn = 1;
 		}
