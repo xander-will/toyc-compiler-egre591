@@ -25,7 +25,7 @@ public class AssignExpression implements Expression {
 	private void checkLeft() {
 		if (!(left instanceof Identifier))
 			TCoutput.reportSEMANTIC_ERROR("",
-					"Only variables may be assigned to, (" + left.toString() + "is an expression)");
+					"Only variables may be assigned to, (" + left.toString().replaceAll("\n", " ") + "is an expression)");
 	}
 
 	public String generateCode() {

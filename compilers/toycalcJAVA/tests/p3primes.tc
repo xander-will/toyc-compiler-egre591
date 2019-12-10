@@ -1,0 +1,61 @@
+int main() {
+	int n;
+	int i;
+	int lower;
+	int upper;
+	int total;
+	
+	n = 0;
+	while (n < 1) {
+		write("Enter a positive integer: ");
+		read(n);
+		if (n < 1) 
+			write("Try again. ");
+	}
+	
+	i = 2;
+	while ((i < n) && (n % i)) {
+		i = i + 1;
+	}
+	
+	if (i < n) 
+		write(n, " is not prime");
+	else 
+		write(n, " is a prime number");
+	newline; newline;
+	
+	write("lower bound: "); read(lower);
+	write("upper bound: "); read(upper);
+	while ((upper <= lower) || (lower < 2)) {
+		write(" Error: upper must be > than lower and lower must be >= 2");
+		newline;
+		write("lower bound: "); read(lower);
+		write("upper bound: "); read(upper);
+	}
+	
+	i = lower;
+	total = 0;
+	while (i <= upper) {
+		int j;
+		
+		j = 2;
+		while ((j < i) && (i % j)) {
+			j = j + 1;
+		}
+		
+		if (j == i) {
+			write(i, " ");
+			total = total + 1;
+			if (!(total % 10)) 
+				newline;
+		}
+		
+		i = i + 1;
+	}
+	
+	newline;
+	write("Number prime numbers between ", lower);
+	write(" and ", upper, "(inclusive):", total);
+	
+	return 0;
+}
