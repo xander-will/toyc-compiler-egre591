@@ -1,0 +1,23 @@
+
+int main() {
+ 
+  int lower; int upper;
+  int i; int d;
+
+  lower = 5; upper = 25;
+  i = lower;
+  while(i <= upper) {
+    d = 2;
+    while(d < i) {
+      if (i % d == 0)
+        d = 999;
+      d = d + 1;
+      if (d == i)
+        write(i," ");
+    }
+    i = i + 1;
+  }
+  return;
+}
+
+

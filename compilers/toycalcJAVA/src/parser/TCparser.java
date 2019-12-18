@@ -468,15 +468,16 @@ public class TCparser implements Parser {
 			return expr;
 		case NOT:
 			exitingDEBUG("primary");
-			return new Not(expression());
+			return new Not(primary());
 		case ADDOP:
 			Expression p = primary();
 			if (sw.getLexeme().equals("-")) {
 				exitingDEBUG("primary");
-				return new Minus(expression());
+				return new Minus(p);
 			}
 			exitingDEBUG("primary");
 			return p;
+
 		default:
 			TCoutput.reportSYNTAX_ERROR(scanner, "unrecognized primary");
 			return null;

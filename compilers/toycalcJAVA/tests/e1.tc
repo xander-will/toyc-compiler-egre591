@@ -1,0 +1,9 @@
+int main() {
+  read(n);
+  if (n > 0)
+    write("n > 0");
+  else
+    write("n <= 0");
+  newline;
+  return;
+}
