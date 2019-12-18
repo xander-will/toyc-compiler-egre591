@@ -33,7 +33,7 @@ public class WriteStatement implements Statement {
 		String s = "";
 		for (Expression e : ap) {
 			s += e.generateCode();
-			if (e instanceof Number || e instanceof Identifier || e instanceof FunctionCall)
+			if (e instanceof Number || e instanceof Identifier || e instanceof FunctionCall || e instanceof Expression)
 				s += TCglobals.codetemplate.write("int");
 			else
 				s += TCglobals.codetemplate.write("string");
